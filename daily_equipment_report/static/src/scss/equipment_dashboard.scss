@@ -856,113 +856,170 @@
     }
 
 
-    .o_eq_trend {
-
-        height:
-            260px;
+    .o_eq_trend_summary {
 
         display:
             flex;
 
-        align-items:
-            flex-end;
+        flex-wrap:
+            wrap;
 
         gap:
-            8px;
+            12px
+            24px;
 
-        padding-top:
-            20px;
-    }
+        margin:
+            0
+            0
+            14px;
 
+        > div {
 
-    .o_eq_trend_item {
+            display:
+                flex;
 
-        min-width:
-            20px;
+            flex-direction:
+                column;
 
-        flex:
-            1;
+            gap:
+                2px;
+        }
 
-        height:
-            100%;
-
-        display:
-            grid;
-
-        grid-template-rows:
-            18px
-            1fr
-            34px;
-
-        align-items:
-            end;
-
-        text-align:
-            center;
-
-
-        small {
-
-            padding-top:
-                6px;
+        strong {
 
             color:
-                #8a909d;
+                #252733;
 
             font-size:
-                10px;
+                19px;
 
-            transform:
-                rotate(-35deg);
+            line-height:
+                1.1;
+        }
 
-            white-space:
-                nowrap;
+        span {
+
+            color:
+                #858b98;
+
+            font-size:
+                11px;
         }
     }
 
 
-    .o_eq_trend_value {
-
-        font-size:
-            10px;
-
-        color:
-            #747b88;
-    }
-
-
-    .o_eq_trend_track {
-
-        height:
-            100%;
-
-        display:
-            flex;
-
-        align-items:
-            flex-end;
-
-        justify-content:
-            center;
-    }
-
-
-    .o_eq_trend_bar {
+    .o_eq_trend_chart {
 
         width:
-            65%;
+            100%;
 
-        min-height:
-            4px;
+        overflow-x:
+            auto;
+    }
 
-        border-radius:
-            5px
-            5px
-            0
-            0;
 
-        background:
-            #9d7c98;
+    .o_eq_trend_svg {
+
+        display:
+            block;
+
+        width:
+            100%;
+
+        min-width:
+            420px;
+
+        height:
+            190px;
+
+        overflow:
+            visible;
+    }
+
+
+    .o_eq_trend_gridline {
+
+        fill:
+            none;
+
+        stroke:
+            #ececf0;
+
+        stroke-width:
+            1;
+    }
+
+
+    .o_eq_trend_area {
+
+        fill:
+            rgba(157, 124, 152, .24);
+    }
+
+
+    .o_eq_trend_line {
+
+        fill:
+            none;
+
+        stroke:
+            #8c6285;
+
+        stroke-width:
+            2.5;
+
+        stroke-linecap:
+            round;
+
+        stroke-linejoin:
+            round;
+    }
+
+
+    .o_eq_trend_point {
+
+        fill:
+            #8c6285;
+
+        stroke:
+            #fff;
+
+        stroke-width:
+            1.5;
+    }
+
+
+    .o_eq_trend_labels {
+
+        display:
+            grid;
+
+        min-width:
+            420px;
+
+        gap:
+            2px;
+
+        span {
+
+            overflow:
+                hidden;
+
+            color:
+                #858b98;
+
+            font-size:
+                9px;
+
+            text-align:
+                center;
+
+            text-overflow:
+                ellipsis;
+
+            white-space:
+                nowrap;
+        }
     }
 
 

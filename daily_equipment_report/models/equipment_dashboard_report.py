@@ -174,6 +174,84 @@ class EquipmentDashboardReport(models.AbstractModel):
                 segment["dashoffset"] = f"{-offset:.2f}"
                 offset += length
 
+        trend_rows = result["analytics"]["inspection_trend"]
+        chart_width = 640
+        chart_top = 14
+        chart_baseline = 154
+        chart_inset = 12
+        max_failed = max(
+            (row["failure_count"] for row in trend_rows),
+            default=0,
+        )
+        trend_points = []
+        for index, row in enumerate(trend_rows):
+            x = (
+                chart_inset
+                + index
+                * (chart_width - 2 * chart_inset)
+                / (len(trend_rows) - 1)
+                if len(trend_rows) > 1
+                else chart_width / 2
+            )
+            failed = row["failure_count"]
+            y = chart_baseline - (
+                failed * (chart_baseline - chart_top) / max_failed
+                if max_failed
+                else 0
+            )
+            trend_points.append({
+                "x": round(x, 2),
+                "y": round(y, 2),
+                "label": row["label"],
+                "count": failed,
+                "rate": row["failure_rate"],
+            })
+
+        trend_line_path = ""
+        if trend_points:
+            trend_line_path = "M %.2f %.2f" % (
+                trend_points[0]["x"],
+                trend_points[0]["y"],
+            )
+            for previous, current in zip(
+                trend_points,
+                trend_points[1:],
+            ):
+                control_x = (
+                    previous["x"] + current["x"]
+                ) / 2
+                trend_line_path += (
+                    " C %.2f %.2f, %.2f %.2f, %.2f %.2f"
+                    % (
+                        control_x,
+                        previous["y"],
+                        control_x,
+                        current["y"],
+                        current["x"],
+                        current["y"],
+                    )
+                )
+
+        trend_area_path = (
+            "%s L %.2f %.2f L %.2f %.2f Z"
+            % (
+                trend_line_path,
+                trend_points[-1]["x"],
+                chart_baseline,
+                trend_points[0]["x"],
+                chart_baseline,
+            )
+            if trend_points
+            else ""
+        )
+        peak_point = max(
+            trend_points,
+            key=lambda point: point["count"],
+            default={"label": "-", "count": 0},
+        )
+        inspection_total = result["inspections"]["total"]
+        failed_total = result["inspections"]["failed"]
+
         equipment_segments = [
             {
                 "label": label,
@@ -257,11 +335,21 @@ class EquipmentDashboardReport(models.AbstractModel):
             "recent_critical": recent_critical,
             "overdue_parts": overdue_parts,
             "recent_maintenance": recent_maintenance,
-            "trend_bars": prepare_bars(
-                result["analytics"]["inspection_trend"],
-                "label",
-                "count",
-                12,
+            "trend_points": trend_points,
+            "trend_line_path": trend_line_path,
+            "trend_area_path": trend_area_path,
+            "trend_peak": peak_point,
+            "trend_failure_total": failed_total,
+            "trend_failure_rate": round(
+                failed_total * 100 / inspection_total
+            )
+            if inspection_total
+            else 0,
+            "trend_failure_rate_label": "%s%%"
+            % (
+                round(failed_total * 100 / inspection_total)
+                if inspection_total
+                else 0
             ),
             "generated_at": fields.Datetime.context_timestamp(
                 self, fields.Datetime.now()

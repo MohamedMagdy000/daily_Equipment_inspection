@@ -387,38 +387,66 @@ export class EquipmentInspectionDashboard
         );
     }
 
-    trendHeight(value) {
-
-        const rows =
-            this.state.data
-                ?.analytics
-                ?.inspection_trend
-            || [];
-
-        const max =
-            Math.max(
-                ...rows.map(
-                    (row) =>
-                        Number(
-                            row.count
-                            || 0
-                        )
-                ),
-                1
+    get failureTrendChart() {
+        const rows = this.state.data?.analytics?.inspection_trend || [];
+        const width = 640;
+        const top = 16;
+        const baseline = 180;
+        const inset = 12;
+        const maxCount = Math.max(
+            ...rows.map((row) => Number(row.failure_count || 0)),
+            1
+        );
+        const points = rows.map((row, index) => {
+            const x = rows.length > 1
+                ? inset + (index * (width - 2 * inset)) / (rows.length - 1)
+                : width / 2;
+            const failureCount = Number(row.failure_count || 0);
+            const y = baseline - (
+                (failureCount / maxCount) * (baseline - top)
             );
 
-        return (
-            `${Math.max(
-                4,
-                (
-                    Number(
-                        value || 0
-                    )
-                    / max
-                )
-                * 100
-            )}%`
+            return {
+                x,
+                y,
+                label: row.label,
+                count: failureCount,
+                rate: Number(row.failure_rate || 0),
+            };
+        });
+
+        let linePath = "";
+        if (points.length) {
+            linePath = `M ${points[0].x} ${points[0].y}`;
+            for (let index = 1; index < points.length; index++) {
+                const previous = points[index - 1];
+                const current = points[index];
+                const controlX = previous.x + (current.x - previous.x) / 2;
+                linePath += ` C ${controlX} ${previous.y}, ${controlX} ${current.y}, ${current.x} ${current.y}`;
+            }
+        }
+
+        const areaPath = points.length
+            ? `${linePath} L ${points[points.length - 1].x} ${baseline} L ${points[0].x} ${baseline} Z`
+            : "";
+        const peak = points.reduce(
+            (highest, point) => point.count > highest.count ? point : highest,
+            { label: "-", count: 0 }
         );
+        const inspections = this.state.data?.inspections || {};
+        const failedCount = Number(inspections.failed || 0);
+        const totalCount = Number(inspections.total || 0);
+
+        return {
+            areaPath,
+            linePath,
+            points,
+            peak: peak.count ? peak : { label: "-", count: 0 },
+            failedCount,
+            failureRate: totalCount
+                ? Math.round((failedCount / totalCount) * 100)
+                : 0,
+        };
     }
 
     get equipmentDonutStyle() {

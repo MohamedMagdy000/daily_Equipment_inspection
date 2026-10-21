@@ -34,10 +34,10 @@
                             box-sizing: border-box;
                             color: #252733;
                             font-family: Arial, sans-serif;
-                            font-size: 8px;
+                            font-size: 9.5px;
                             height: auto;
                             line-height: 1.18;
-                            min-height: 198mm;
+                            min-height: 0;
                             overflow: visible;
                             padding: 0;
                             page-break-after: avoid !important;
@@ -60,8 +60,8 @@
                             border-radius: 10px;
                             color: #fff;
                             display: table;
-                            margin-bottom: 9px;
-                            padding: 10px 15px;
+                            margin-bottom: 5px;
+                            padding: 7px 12px;
                             width: 100%;
                         }
                         .eq-header-main, .eq-header-meta {
@@ -76,17 +76,18 @@
                         }
                         .eq-header h1 {
                             color: #fff;
-                            font-size: 19px;
+                            font-size: 22px;
                             font-weight: 700;
                             margin: 0 0 3px;
                         }
-                        .eq-subtitle { color: #c5c9d1; font-size: 9.5px; }
+                        .eq-subtitle { color: #c5c9d1; font-size: 11.5px; }
                         .eq-filter-bar {
                             background: #fafafa;
                             border: 1px solid #e7e8ec;
                             border-radius: 8px;
                             color: #666b77;
-                            margin-bottom: 8px;
+                            font-size: 10px;
+                            margin-bottom: 4px;
                             padding: 4px 9px;
                         }
                         .eq-chip {
@@ -99,14 +100,14 @@
                         .eq-alert-row, .eq-card-row, .eq-analytics-grid,
                         .eq-details-grid {
                             border-collapse: separate;
-                            border-spacing: 6px;
+                            border-spacing: 4px;
                             table-layout: fixed;
                             width: 100%;
                         }
-                        .eq-alert-row { margin-bottom: 4px; }
+                        .eq-alert-row { margin-bottom: 2px; }
                         .eq-alert-row td {
                             border-radius: 7px;
-                            font-size: 6.5px;
+                            font-size: 9px;
                             font-weight: 600;
                             padding: 6px 8px;
                             text-align: center;
@@ -116,10 +117,10 @@
                         .eq-alert-info { background: #eaf3fb; color: #365d7b; }
                         .eq-section-title {
                             color: #545966;
-                            font-size: 8.5px;
+                            font-size: 11px;
                             font-weight: 700;
                             letter-spacing: .04em;
-                            margin: 8px 0 4px 5px;
+                            margin: 4px 0 2px 5px;
                             text-transform: uppercase;
                         }
                         .eq-card-row { margin-bottom: 1px; }
@@ -131,31 +132,31 @@
                         }
                         .eq-card {
                             border-radius: 12px;
-                            min-height: 51px;
-                            padding: 7px 10px;
+                            min-height: 47px;
+                            padding: 5px 8px;
                         }
                         .eq-card span { display: block; }
                         .eq-card-label {
                             color: #4d5260;
-                            font-size: 8.5px;
+                            font-size: 10.5px;
                             font-weight: 600;
                         }
                         .eq-card-value {
                             color: #141820;
-                            font-size: 18px;
+                            font-size: 20px;
                             font-weight: 700;
                             line-height: 1.05;
                             margin: 3px 0 2px;
                         }
-                        .eq-card-note { color: #818795; font-size: 7.5px; }
+                        .eq-card-note { color: #818795; font-size: 9.5px; }
                         .eq-peach { background: #fff0e6; }
                         .eq-green { background: #e7f7ef; }
                         .eq-blue { background: #e9f0ff; }
                         .eq-red { background: #fcebed; }
                         .eq-progress {
                             border-radius: 10px;
-                            margin: 5px 6px 7px;
-                            padding: 5px 9px;
+                            margin: 3px 5px 5px;
+                            padding: 4px 8px;
                         }
                         .eq-progress-green { background: #e7f7ef; }
                         .eq-progress-blue { background: #edf3ff; }
@@ -163,17 +164,17 @@
                             color: #4d5260;
                             margin-bottom: 2px;
                         }
-                        .eq-progress-head strong { font-size: 9px; }
+                        .eq-progress-head strong { font-size: 11px; }
                         .eq-progress-head .rate {
                             color: #151922;
-                            font-size: 11px;
+                            font-size: 12px;
                             font-weight: 700;
                             margin-left: 8px;
                         }
                         .eq-progress-head .detail {
                             color: #777e8b;
                             float: right;
-                            font-size: 8px;
+                            font-size: 9.5px;
                             padding-top: 3px;
                         }
                         .eq-progress-track {
@@ -195,18 +196,19 @@
                             border: 1px solid #e7e8ec;
                             border-radius: 12px;
                             box-shadow: 0 1px 3px rgba(26, 31, 44, .04);
-                            height: 106px;
-                            padding: 8px 10px;
+                            height: 104px;
+                            padding: 7px 9px;
                         }
+                        .eq-panel-trend { height: 120px; }
                         .eq-panel h4 {
                             color: #343947;
-                            font-size: 7.5px;
+                            font-size: 10.5px;
                             font-weight: 700;
                             margin: 0 0 5px;
                         }
                         .eq-donut-layout {
                             border-collapse: collapse;
-                            height: 68px;
+                            height: 60px;
                             width: 100%;
                         }
                         .eq-donut-layout td {
@@ -225,8 +227,8 @@
                         .eq-donut-legend td {
                             border: 0 !important;
                             color: #606674;
-                            font-size: 7.5px;
-                            padding: 1px 3px;
+                            font-size: 9px;
+                            padding: 2px 3px;
                         }
                         .eq-donut-legend td:last-child {
                             color: #252733;
@@ -244,8 +246,8 @@
                         .eq-bar-row { margin: 1px 0; }
                         .eq-bar-label {
                             color: #555b67;
-                            font-size: 6px;
-                            line-height: 7px;
+                            font-size: 8.5px;
+                            line-height: 10px;
                             margin-bottom: 1px;
                             overflow: hidden;
                             white-space: nowrap;
@@ -253,63 +255,83 @@
                         .eq-bar-label strong { color: #252733; float: right; }
                         .eq-bar-equipment {
                             color: #737987;
-                            font-size: 5.5px;
-                            line-height: 7px;
+                            font-size: 8.5px;
+                            line-height: 10px;
                             margin-bottom: 1px;
                             overflow-wrap: anywhere;
                         }
                         .eq-bar-track {
                             background: #f0f1f4;
                             border-radius: 5px;
-                            height: 4px;
+                            height: 6px;
                             overflow: hidden;
                         }
                         .eq-bar-fill {
                             background: #6f88c7;
                             border-radius: 5px;
-                            height: 4px;
+                            height: 6px;
                         }
                         .eq-bar-fill-alt { background: #e89a5b; }
                         .eq-bar-fill-location { background: #79b8a6; }
-                        .eq-trend {
+                        .eq-trend-summary {
                             border-collapse: collapse;
-                            height: 65px;
+                            width: 100%;
+                        }
+                        .eq-trend-summary td {
+                            border: 0 !important;
+                            color: #858b98;
+                            font-size: 8px;
+                            padding: 0 3px 3px 0;
+                            vertical-align: top;
+                        }
+                        .eq-trend-summary strong {
+                            color: #252733;
+                            display: block;
+                            font-size: 10px;
+                            line-height: 11px;
+                        }
+                        .eq-trend-chart {
+                            height: 68px;
+                            width: 100%;
+                        }
+                        .eq-trend-svg {
+                            display: block;
+                            height: 56px;
+                            overflow: visible;
+                            width: 100%;
+                        }
+                        .eq-trend-area { fill: #e6dce5; }
+                        .eq-trend-line {
+                            fill: none;
+                            stroke: #8c6285;
+                            stroke-linecap: round;
+                            stroke-linejoin: round;
+                            stroke-width: 3;
+                        }
+                        .eq-trend-point {
+                            fill: #8c6285;
+                            stroke: #fff;
+                            stroke-width: 2;
+                        }
+                        .eq-trend-labels {
+                            border-collapse: collapse;
                             table-layout: fixed;
                             width: 100%;
                         }
-                        .eq-trend td {
+                        .eq-trend-labels td {
                             border: 0 !important;
-                            border-bottom: 1px solid #e7e8ec !important;
-                            padding: 0 1px;
+                            color: #858b98;
+                            font-size: 7.5px;
+                            overflow: hidden;
+                            padding: 0;
                             text-align: center;
-                            vertical-align: bottom;
-                            width: 8.33%;
-                        }
-                        .eq-trend-count {
-                            color: #727887;
-                            display: block;
-                            font-size: 6px;
-                            padding-bottom: 1px;
-                        }
-                        .eq-trend-bar {
-                            background: #6f88c7;
-                            border-radius: 3px 3px 0 0;
-                            display: block;
-                            margin: 0 auto;
-                            width: 62%;
-                        }
-                        .eq-trend-label {
-                            color: #818795;
-                            display: block;
-                            font-size: 6px;
-                            padding-top: 2px;
                             white-space: nowrap;
                         }
                         .eq-detail-row {
                             border-collapse: separate;
-                            border-spacing: 8px;
+                            border-spacing: 5px;
                             table-layout: fixed;
-                            margin-bottom: 3px;
+                            margin-bottom: 2px;
                             width: 100%;
                         }
                         .eq-detail-row td {
@@ -324,9 +346,9 @@
                             border-radius: 10px;
                             border-top: 3px solid #6f88c7;
                             box-shadow: 0 1px 3px rgba(26, 31, 44, .05);
-                            height: 148px;
-                            min-height: 148px;
-                            padding: 12px 11px;
+                            height: 128px;
+                            min-height: 128px;
+                            padding: 8px 9px;
                         }
                         .eq-summary-critical {
                             background: #fff8f8;
@@ -346,51 +368,51 @@
                         }
                         .eq-summary-header {
                             color: #545966;
-                            font-size: 11px;
+                            font-size: 12px;
                             font-weight: 700;
                             line-height: 13px;
-                            margin-bottom: 12px;
+                            margin-bottom: 8px;
                         }
                         .eq-summary-count {
                             background: #eef2fa;
                             border-radius: 8px;
                             color: #5c6782;
                             float: right;
-                            font-size: 10px;
+                            font-size: 11px;
                             font-weight: 600;
                             padding: 3px 7px;
                         }
                         .eq-summary-record {
                             color: #252733;
-                            font-size: 13px;
+                            font-size: 14px;
                             font-weight: 700;
-                            line-height: 16px;
+                            line-height: 17px;
                             overflow: hidden;
                             white-space: nowrap;
                         }
                         .eq-summary-info {
                             color: #555b67;
-                            font-size: 11px;
-                            line-height: 15px;
+                            font-size: 12px;
+                            line-height: 16px;
                             overflow: hidden;
                             white-space: nowrap;
                         }
                         .eq-summary-info strong { color: #343947; }
                         .eq-summary-more {
                             color: #818795;
-                            font-size: 10px;
+                            font-size: 11px;
                             font-style: italic;
-                            margin-top: 11px;
+                            margin-top: 7px;
                         }
                         .eq-summary-empty {
                             color: #818795;
-                            font-size: 11px;
-                            padding: 34px 3px;
+                            font-size: 12px;
+                            padding: 23px 3px;
                         }
                         .eq-status-badge {
                             border-radius: 8px;
                             display: inline-block;
-                            font-size: 6px;
+                            font-size: 8.5px;
                             padding: 2px 4px;
                         }
                         .eq-status-out { background: #fcebed; color: #a4383f !important; }
@@ -648,17 +670,48 @@
                                 </div>
                             </td>
                             <td>
-                                <div class="eq-panel">
-                                    <h4>Inspection Trend</h4>
-                                    <table class="eq-trend">
+                                <div class="eq-panel eq-panel-trend">
+                                    <h4>Failed Inspections Trend</h4>
+                                    <table class="eq-trend-summary">
                                         <tr>
-                                            <td t-foreach="trend_bars" t-as="row">
-                                                <span class="eq-trend-count" t-out="row['count']"/>
-                                                <span class="eq-trend-bar" t-att-style="'height: %spx' % row['height']"/>
-                                                <span class="eq-trend-label" t-out="row['label']"/>
-                                            </td>
+                                            <td><strong t-out="trend_failure_total"/>failed inspections</td>
+                                            <td><strong t-out="trend_failure_rate_label"/>failure rate</td>
+                                            <td><strong t-out="trend_peak['count']"/>peak period - <span t-out="trend_peak['label']"/></td>
                                         </tr>
                                     </table>
+                                    <div class="eq-trend-chart" t-if="trend_points">
+                                        <svg class="eq-trend-svg"
+                                             viewBox="0 0 640 170"
+                                             preserveAspectRatio="none"
+                                             role="img"
+                                             aria-label="Failed inspection trend">
+                                            <path d="M12 154 H628"
+                                                  fill="none"
+                                                  stroke="#ececf0"
+                                                  stroke-width="2"/>
+                                            <path class="eq-trend-area"
+                                                  t-att-d="trend_area_path"/>
+                                            <path class="eq-trend-line"
+                                                  t-att-d="trend_line_path"/>
+                                            <circle t-foreach="trend_points"
+                                                    t-as="point"
+                                                    t-if="point['count']"
+                                                    class="eq-trend-point"
+                                                    t-att-cx="point['x']"
+                                                    t-att-cy="point['y']"
+                                                    r="6">
+                                                <title t-out="'%s: %s failed inspections - rate %s' % (point['label'], point['count'], point['rate'])"/>
+                                            </circle>
+                                        </svg>
+                                        <table class="eq-trend-labels">
+                                            <tr>
+                                                <td t-foreach="trend_points"
+                                                    t-as="point"
+                                                    t-out="point['label']"/>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <div class="eq-empty" t-if="not trend_points">No inspection data in this period.</div>
                                 </div>
                             </td>
                         </tr>

@@ -1100,36 +1100,63 @@
 
                                 <i class="fa fa-line-chart me-2"/>
 
-                                Inspection Trend
+                                Failed Inspections Trend
 
                             </h4>
 
 
-                            <div class="o_eq_trend"
+                            <div class="o_eq_trend_summary">
+                                <div>
+                                    <strong t-esc="this.failureTrendChart.failedCount"/>
+                                    <span>failed inspections</span>
+                                </div>
+                                <div>
+                                    <strong t-esc="this.failureTrendChart.failureRate + '%'"/>
+                                    <span>failure rate</span>
+                                </div>
+                                <div>
+                                    <strong t-esc="this.failureTrendChart.peak.count"/>
+                                    <span t-esc="'peak period - ' + this.failureTrendChart.peak.label"/>
+                                </div>
+                            </div>
+
+                            <div class="o_eq_trend_chart"
                                  t-if="state.data.analytics.inspection_trend.length">
+                                <svg class="o_eq_trend_svg"
+                                     viewBox="0 0 640 200"
+                                     preserveAspectRatio="none"
+                                     role="img"
+                                     aria-label="Failed inspection trend for the selected period">
+                                    <path class="o_eq_trend_gridline" d="M12 180 H628"/>
+                                    <path class="o_eq_trend_area"
+                                          t-att-d="this.failureTrendChart.areaPath"/>
+                                    <path class="o_eq_trend_line"
+                                          t-att-d="this.failureTrendChart.linePath"/>
+                                    <t t-foreach="this.failureTrendChart.points"
+                                       t-as="point"
+                                       t-key="point.label">
+                                        <circle t-if="point.count"
+                                                class="o_eq_trend_point"
+                                                t-att-cx="point.x"
+                                                t-att-cy="point.y"
+                                                r="3.5">
+                                            <title t-esc="point.label + ': ' + point.count + ' failed inspections (' + point.rate + '%)'"/>
+                                        </circle>
+                                    </t>
+                                </svg>
+                                <div class="o_eq_trend_labels"
+                                     t-att-style="'grid-template-columns: repeat(' + this.failureTrendChart.points.length + ', minmax(0, 1fr))'">
+                                    <span t-foreach="this.failureTrendChart.points"
+                                          t-as="point"
+                                          t-key="point.label"
+                                          t-esc="point.label"
+                                          t-att-title="point.count + ' failed inspections - ' + point.rate + '%'"/>
+                                </div>
+                            </div>
 
-                                <t t-foreach="state.data.analytics.inspection_trend"
-                                   t-as="row"
-                                   t-key="row.label">
-
-                                    <div class="o_eq_trend_item">
-
-                                        <span class="o_eq_trend_value"
-                                              t-esc="row.count"/>
-
-                                        <div class="o_eq_trend_track">
-
-                                            <div class="o_eq_trend_bar"
-                                                 t-att-style="'height:' + this.trendHeight(row.count)"/>
-
-                                        </div>
-
-                                        <small t-esc="row.label"/>
-
-                                    </div>
-
-                                </t>
-
+                            <div class="o_eq_empty"
+                                 t-if="!state.data.analytics.inspection_trend.length">
+                                No inspection data in this period.
                             </div>
 
                         </div>

@@ -1326,7 +1326,12 @@ class EquipmentInspectionDashboard(models.AbstractModel):
         date_to,
     ):
 
-        counts = defaultdict(int)
+        counts = defaultdict(
+            lambda: {
+                "total": 0,
+                "failed": 0,
+            }
+        )
 
         reports = Report.search(
             report_domain
@@ -1344,9 +1349,10 @@ class EquipmentInspectionDashboard(models.AbstractModel):
                     )
                 )
 
-                counts[
-                    local_dt.date()
-                ] += 1
+                bucket = counts[local_dt.date()]
+                bucket["total"] += 1
+                if report.has_issue:
+                    bucket["failed"] += 1
 
         total_days = (
             date_to
@@ -1384,16 +1390,21 @@ class EquipmentInspectionDashboard(models.AbstractModel):
                 - cursor
             ).days + 1
 
-            count = sum(
+            bucket_counts = [
                 counts.get(
-                    cursor
-                    + timedelta(
-                        days=offset
-                    ),
-                    0,
+                    cursor + timedelta(days=offset),
+                    {"total": 0, "failed": 0},
                 )
                 for offset
                 in range(bucket_days)
+            ]
+            count = sum(
+                day_counts["total"]
+                for day_counts in bucket_counts
+            )
+            failed_count = sum(
+                day_counts["failed"]
+                for day_counts in bucket_counts
             )
 
             label = (
@@ -1408,6 +1419,12 @@ class EquipmentInspectionDashboard(models.AbstractModel):
 
                 "count":
                     count,
+
+                "failure_count":
+                    failed_count,
+
+                "failure_rate":
+                    self._percent(failed_count, count),
             })
 
             cursor = (
