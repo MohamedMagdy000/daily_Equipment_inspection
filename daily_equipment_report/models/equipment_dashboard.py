@@ -862,8 +862,14 @@ class EquipmentInspectionDashboard(models.AbstractModel):
         }
 
     @api.model
-    def action_open_severity_inspections(self, filters=None, severity=False):
-        """Open inspections containing failed checks of the selected severity."""
+    def action_open_severity_inspections(
+        self,
+        filters=None,
+        severity=False,
+        question_id=False,
+        selected_equipment_id=False,
+    ):
+        """Open inspections matching the selected failure criteria."""
         filters = filters or {}
         severity = severity or filters.get("severity") or False
 
@@ -874,8 +880,13 @@ class EquipmentInspectionDashboard(models.AbstractModel):
 
         category_id = self._to_int(filters.get("category_id"))
         equipment_id = self._to_int(filters.get("equipment_id"))
+        question_id = self._to_int(question_id)
+        selected_equipment_id = self._to_int(selected_equipment_id)
         location = (filters.get("location") or "").strip()
         operational_status = filters.get("operational_status") or False
+
+        if selected_equipment_id:
+            equipment_id = selected_equipment_id
 
         if category_id:
             equipment_domain.append(("category_id", "=", category_id))
@@ -905,6 +916,8 @@ class EquipmentInspectionDashboard(models.AbstractModel):
         )
         if severity:
             line_domain.append(("failure_severity", "=", severity))
+        if question_id:
+            line_domain.append(("question_id", "=", question_id))
 
         report_ids = list(set(Line.search(line_domain).mapped("report_id").ids))
 
@@ -921,10 +934,21 @@ class EquipmentInspectionDashboard(models.AbstractModel):
             "high": "High Severity Inspections",
             "critical": "Critical Severity Inspections",
         }
+        if question_id and selected_equipment_id:
+            question = self.env["equipment.checklist.question"].browse(
+                question_id
+            ).exists()
+            equipment = Equipment.browse(selected_equipment_id).exists()
+            action_name = "%s - %s: Failed Inspections" % (
+                question.display_name if question else "Checklist Question",
+                equipment.display_name if equipment else "Equipment",
+            )
+        else:
+            action_name = labels.get(severity, "Failed Inspections")
 
         return {
             "type": "ir.actions.act_window",
-            "name": labels.get(severity, "Failed Inspections"),
+            "name": action_name,
             "res_model": "equipment.daily.report",
             "view_mode": "list,form",
             "views": [

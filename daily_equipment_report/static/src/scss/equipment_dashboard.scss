@@ -729,6 +729,12 @@
         display:
             inline-flex;
 
+        border:
+            0;
+
+        appearance:
+            none;
+
         align-items:
             center;
 
@@ -751,8 +757,49 @@
         color:
             #4d5260;
 
+        font-family:
+            inherit;
+
+        font-size:
+            inherit;
+
+        line-height:
+            inherit;
+
         overflow-wrap:
             anywhere;
+
+        text-align:
+            left;
+
+        cursor:
+            pointer;
+
+        transition:
+            background-color .15s ease,
+            color .15s ease;
+
+
+        &:hover {
+
+            background:
+                #e4e9f2;
+
+            color:
+                #252733;
+        }
+
+
+        &:focus-visible {
+
+            outline:
+                2px
+                solid
+                #6f88c7;
+
+            outline-offset:
+                2px;
+        }
 
 
         small {

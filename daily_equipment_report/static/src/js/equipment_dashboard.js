@@ -644,6 +644,42 @@ export class EquipmentInspectionDashboard
         }
     }
 
+    async openDefectInspections(ev) {
+        const questionId = Number(
+            ev.currentTarget.dataset.questionId
+        );
+        const equipmentId = Number(
+            ev.currentTarget.dataset.equipmentId
+        );
+
+        if (!questionId || !equipmentId) {
+            return;
+        }
+
+        try {
+            const action = await this.orm.call(
+                "equipment.inspection.dashboard",
+                "action_open_severity_inspections",
+                [
+                    this.state.filters,
+                    false,
+                    questionId,
+                    equipmentId,
+                ]
+            );
+
+            if (action) {
+                await this.action.doAction(action);
+            }
+        } catch (error) {
+            this.notification.add(
+                "Unable to open failed inspections for this equipment.",
+                { type: "danger" }
+            );
+            throw error;
+        }
+    }
+
     async openInspection(ev) {
 
         const id =

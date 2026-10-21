@@ -937,10 +937,15 @@
                                                 <t t-foreach="row.equipment"
                                                    t-as="equipment"
                                                    t-key="equipment.id">
-                                                    <span class="o_eq_equipment_tag">
+                                                    <button type="button"
+                                                            class="o_eq_equipment_tag"
+                                                            t-att-data-question-id="row.id"
+                                                            t-att-data-equipment-id="equipment.id"
+                                                            t-att-title="'Open failed inspections for ' + row.name + ' on ' + equipment.name"
+                                                            t-on-click.stop.prevent="this.openDefectInspections">
                                                         <span t-esc="equipment.name"/>
                                                         <small t-esc="'x ' + equipment.count"/>
-                                                    </span>
+                                                    </button>
                                                 </t>
                                             </div>
 
