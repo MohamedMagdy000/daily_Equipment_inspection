@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_equipment_daily_inspection" model="report.paperformat">
+        <field name="name">Equipment Inspection A4</field>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">32</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">12</field>
+        <field name="margin_right">12</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">24</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_equipment_daily_inspection" model="ir.actions.report">
+        <field name="name">Daily Equipment Inspection</field>
+        <field name="model">equipment.daily.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">daily_equipment_report.report_equipment_daily_inspection</field>
+        <field name="paperformat_id" ref="paperformat_equipment_daily_inspection"/>
+        <field name="binding_model_id" ref="model_equipment_daily_report"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Inspection - %s' % (object.name)</field>
+    </record>
+
+    <template id="report_equipment_daily_inspection">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page eq-report">
+                        <style>
+                            .eq-report {
+                                color: #233044;
+                                font-family: Arial, sans-serif;
+                                font-size: 10pt;
+                            }
+                            .eq-report h1 {
+                                color: #26364a;
+                                font-size: 24pt;
+                                font-weight: 700;
+                                margin: 0;
+                            }
+                            .eq-report h2 {
+                                color: #31445a;
+                                font-size: 12pt;
+                                font-weight: 700;
+                                margin: 0 0 10px;
+                                text-transform: uppercase;
+                            }
+                            .eq-report .report-heading {
+                                border-bottom: 3px solid #79536f;
+                                margin-bottom: 18px;
+                                padding: 8px 0 14px;
+                            }
+                            .eq-report .report-subtitle {
+                                color: #728096;
+                                font-size: 10pt;
+                                margin-top: 5px;
+                            }
+                            .eq-report .status-pill {
+                                border: 1px solid #d9e1ea;
+                                border-radius: 12px;
+                                color: #34465b;
+                                display: inline-block;
+                                font-size: 9pt;
+                                font-weight: 700;
+                                padding: 5px 12px;
+                            }
+                            .eq-report .issue-pill {
+                                background: #fff0ee;
+                                border: 1px solid #f3c1bd;
+                                border-radius: 12px;
+                                color: #a63836;
+                                display: inline-block;
+                                font-size: 9pt;
+                                font-weight: 700;
+                                padding: 5px 12px;
+                            }
+                            .eq-report .info-card {
+                                border: 1px solid #e2e7ed;
+                                border-radius: 5px;
+                                margin-bottom: 16px;
+                                padding: 12px 14px;
+                            }
+                            .eq-report .info-table {
+                                margin: 0;
+                                width: 100%;
+                            }
+                            .eq-report .info-table td {
+                                border: 0;
+                                padding: 4px 6px 4px 0;
+                                vertical-align: top;
+                                width: 50%;
+                            }
+                            .eq-report .label {
+                                color: #718096;
+                                display: inline-block;
+                                min-width: 118px;
+                            }
+                            .eq-report .value {
+                                color: #26364a;
+                                font-weight: 600;
+                            }
+                            .eq-report .checklist {
+                                border: 1px solid #dce3ea;
+                                font-size: 9pt;
+                                margin-top: 7px;
+                                width: 100%;
+                            }
+                            .eq-report .checklist thead {
+                                display: table-header-group;
+                            }
+                            .eq-report .checklist th {
+                                background: #33465c;
+                                border: 1px solid #33465c;
+                                color: #fff;
+                                font-size: 8.5pt;
+                                padding: 8px 6px;
+                                text-align: left;
+                            }
+                            .eq-report .checklist td {
+                                border: 1px solid #dce3ea;
+                                padding: 7px 6px;
+                                vertical-align: top;
+                            }
+                            .eq-report .checklist tr {
+                                page-break-inside: avoid;
+                            }
+                            .eq-report .checklist tbody tr:nth-child(even) {
+                                background: #f6f8fa;
+                            }
+                            .eq-report .answer-yes {
+                                color: #187653;
+                                font-weight: 700;
+                            }
+                            .eq-report .answer-no {
+                                color: #b33c3c;
+                                font-weight: 700;
+                            }
+                            .eq-report .severity {
+                                color: #5b6472;
+                                font-weight: 600;
+                                white-space: nowrap;
+                            }
+                            .eq-report .issue-photo {
+                                display: block;
+                                max-height: 120px;
+                                max-width: 180px;
+                            }
+                            .eq-report .muted {
+                                color: #8792a1;
+                            }
+                            .eq-report .signatures {
+                                margin-top: 30px;
+                                page-break-inside: avoid;
+                                width: 100%;
+                            }
+                            .eq-report .signature-cell {
+                                border-top: 1px solid #9aa5b3;
+                                color: #657286;
+                                padding-top: 7px;
+                                width: 45%;
+                            }
+                        </style>
+
+                        <div class="report-heading">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="vertical-align: bottom;">
+                                        <div class="report-subtitle">DAILY EQUIPMENT INSPECTION</div>
+                                        <h1><span t-field="o.name"/></h1>
+                                        <div class="report-subtitle">
+                                            <span t-field="o.report_date" t-options='{"widget": "datetime"}'/>
+                                        </div>
+                                    </td>
+                                    <td class="text-end" style="vertical-align: bottom;">
+                                        <span class="status-pill"><span t-field="o.state"/></span>
+                                        <span t-if="o.has_issue" class="issue-pill">ISSUE FOUND</span>
+                                        <span t-else="" class="status-pill">NO ISSUES</span>
+                                        <div t-if="o.has_critical_issue" class="issue-pill" style="margin-top: 6px;">
+                                            CRITICAL ISSUE
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="info-card">
+                            <h2>Equipment information</h2>
+                            <table class="info-table">
+                                <tr>
+                                    <td>
+                                        <span class="label">Equipment</span>
+                                        <span class="value" t-field="o.equipment_id"/>
+                                    </td>
+                                    <td>
+                                        <span class="label">Category</span>
+                                        <span class="value" t-field="o.category_id"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Operational status</span>
+                                        <span class="value" t-field="o.equipment_operational_status"/>
+                                    </td>
+                                    <td>
+                                        <span class="label">Model / Brand</span>
+                                        <span class="value" t-if="o.equipment_id.model" t-field="o.equipment_id.model"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Serial / Plate No.</span>
+                                        <span class="value" t-if="o.equipment_id.serial_no" t-field="o.equipment_id.serial_no"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Asset number</span>
+                                        <span class="value" t-if="o.equipment_id.asset_number" t-field="o.equipment_id.asset_number"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Barcode</span>
+                                        <span class="value" t-if="o.equipment_id.barcode" t-field="o.equipment_id.barcode"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Location</span>
+                                        <span class="value" t-if="o.equipment_id.location" t-field="o.equipment_id.location"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Department</span>
+                                        <span class="value" t-if="o.equipment_id.department_id" t-field="o.equipment_id.department_id"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Maintenance team</span>
+                                        <span class="value" t-if="o.equipment_id.maintenance_team_id" t-field="o.equipment_id.maintenance_team_id"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Responsible user</span>
+                                        <span class="value" t-if="o.equipment_id.technician_user_id" t-field="o.equipment_id.technician_user_id"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Last inspection</span>
+                                        <span class="value" t-if="o.equipment_id.last_report_date" t-field="o.equipment_id.last_report_date" t-options='{"widget": "datetime"}'/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Purchase date</span>
+                                        <span class="value" t-if="o.equipment_id.purchase_date" t-field="o.equipment_id.purchase_date"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Last calibration</span>
+                                        <span class="value" t-if="o.equipment_id.last_calibration" t-field="o.equipment_id.last_calibration"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div t-if="o.equipment_id.image_1920" style="margin-top: 10px;">
+                                <img t-att-src="image_data_uri(o.equipment_id.image_1920)"
+                                     alt="Equipment"
+                                     style="max-height: 120px; max-width: 220px;"/>
+                            </div>
+                        </div>
+
+                        <div class="info-card">
+                            <h2>Inspection details</h2>
+                            <table class="info-table">
+                                <tr>
+                                    <td>
+                                        <span class="label">Inspected by</span>
+                                        <span class="value" t-field="o.user_id"/>
+                                    </td>
+                                    <td>
+                                        <span class="label">Inspection date</span>
+                                        <span class="value" t-field="o.report_date" t-options='{"widget": "datetime"}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Submitted on</span>
+                                        <span class="value" t-if="o.submitted_date" t-field="o.submitted_date" t-options='{"widget": "datetime"}'/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Approved by</span>
+                                        <span class="value" t-if="o.approved_by_id" t-field="o.approved_by_id"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="label">Approved on</span>
+                                        <span class="value" t-if="o.approved_date" t-field="o.approved_date" t-options='{"widget": "datetime"}'/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <span class="label">Closed on</span>
+                                        <span class="value" t-if="o.closed_date" t-field="o.closed_date" t-options='{"widget": "datetime"}'/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h2>Inspection checklist</h2>
+                        <table class="checklist">
+                            <thead>
+                                <tr>
+                                    <th style="width: 31%;">Question</th>
+                                    <th style="width: 11%;">Severity</th>
+                                    <th style="width: 9%;">Answer</th>
+                                    <th style="width: 23%;">Issue description</th>
+                                    <th style="width: 26%;">Issue photo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line">
+                                    <td><span t-field="line.question_id"/></td>
+                                    <td class="severity"><span t-field="line.failure_severity"/></td>
+                                    <td>
+                                        <span t-if="line.answer == 'yes'" class="answer-yes">YES</span>
+                                        <span t-elif="line.answer == 'no'" class="answer-no">NO</span>
+                                        <span t-else="" class="muted">Not answered</span>
+                                    </td>
+                                    <td>
+                                        <span t-if="line.answer == 'no' and line.issue_description"
+                                              t-field="line.issue_description"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                    <td>
+                                        <img t-if="line.answer == 'no' and line.issue_image"
+                                             t-att-src="image_data_uri(line.issue_image)"
+                                             alt="Issue photo"
+                                             class="issue-photo"/>
+                                        <span t-else="" class="muted">—</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <table class="signatures">
+                            <tr>
+                                <td class="signature-cell">
+                                    Inspector<br/>
+                                    <strong t-field="o.user_id"/>
+                                </td>
+                                <td style="width: 10%;"/>
+                                <td class="signature-cell">
+                                    Approver<br/>
+                                    <strong t-if="o.approved_by_id" t-field="o.approved_by_id"/>
+                                    <span t-else="" class="muted">Pending approval</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

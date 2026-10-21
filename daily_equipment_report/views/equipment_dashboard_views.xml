@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_equipment_dashboard"
+            model="ir.actions.client">
+
+        <field name="name">Equipment Dashboard</field>
+
+        <field name="tag">daily_equipment_report.equipment_dashboard</field>
+
+    </record>
+
+</odoo>

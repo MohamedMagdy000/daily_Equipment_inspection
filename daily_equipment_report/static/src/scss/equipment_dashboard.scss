@@ -1,0 +1,1054 @@
+.o_equipment_dashboard {
+
+    height: 100%;
+    overflow: auto;
+
+    padding:
+        20px
+        24px
+        40px;
+
+    background: #fff;
+
+
+    .o_eq_loading {
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        min-height: 320px;
+
+        font-size: 16px;
+
+        color: #6c757d;
+    }
+
+
+    .o_eq_header {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content:
+            space-between;
+
+        gap: 16px;
+
+        margin-bottom: 18px;
+
+
+        h2 {
+
+            margin:
+                0
+                0
+                4px;
+
+            font-size: 26px;
+
+            font-weight: 700;
+
+            color: #252733;
+        }
+    }
+
+
+    .o_eq_filter_panel {
+
+        padding: 16px;
+
+        margin-bottom: 16px;
+
+        border:
+            1px
+            solid
+            #e7e8ec;
+
+        border-radius: 16px;
+
+        background: #fafafa;
+    }
+
+
+    .o_eq_filter_grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(
+                    170px,
+                    1fr
+                )
+            );
+
+        gap: 12px;
+
+        align-items: end;
+    }
+
+
+    .o_eq_filter_item {
+
+        label {
+
+            display: block;
+
+            margin-bottom: 5px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            color: #666b77;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .03em;
+        }
+    }
+
+
+    .o_eq_filter_actions {
+
+        display: flex;
+
+        gap: 8px;
+
+        align-items: center;
+    }
+
+
+    .o_eq_alerts {
+
+        display: grid;
+
+        gap: 8px;
+
+        margin-bottom: 24px;
+    }
+
+
+    .o_eq_alert {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        min-height: 48px;
+
+        padding:
+            10px
+            16px;
+
+        border-radius:
+            12px;
+
+        font-size: 14px;
+    }
+
+
+    .o_eq_alert_danger {
+
+        color: #a4383f;
+
+        background: #fde8e9;
+    }
+
+
+    .o_eq_alert_warning {
+
+        color: #8c5c0a;
+
+        background: #fff3da;
+    }
+
+
+    .o_eq_alert_info {
+
+        color: #365d7b;
+
+        background: #eaf3fb;
+    }
+
+
+    .o_eq_section {
+
+        margin-top: 28px;
+
+
+        > h3 {
+
+            display: flex;
+
+            align-items: center;
+
+            margin:
+                0
+                0
+                14px;
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            color: #545966;
+
+            letter-spacing:
+                .04em;
+        }
+    }
+
+
+    .o_eq_cards {
+
+        display: grid;
+
+        gap: 16px;
+    }
+
+
+    .o_eq_cards_4 {
+
+        grid-template-columns:
+            repeat(
+                4,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+
+    .o_eq_card {
+
+        min-height: 142px;
+
+        padding:
+            24px
+            26px;
+
+        border-radius:
+            18px;
+
+        display: flex;
+
+        flex-direction:
+            column;
+
+        justify-content:
+            center;
+
+
+        span {
+
+            font-size:
+                14px;
+
+            font-weight:
+                600;
+
+            color:
+                #4d5260;
+        }
+
+
+        strong {
+
+            margin:
+                8px
+                0
+                2px;
+
+            font-size:
+                34px;
+
+            line-height:
+                1.1;
+
+            color:
+                #141820;
+        }
+
+
+        small {
+
+            color:
+                #818795;
+        }
+    }
+
+
+    .o_eq_card_peach {
+
+        background:
+            #fff0e6;
+    }
+
+
+    .o_eq_card_green {
+
+        background:
+            #e7f7ef;
+    }
+
+
+    .o_eq_card_blue {
+
+        background:
+            #e9f0ff;
+    }
+
+
+    .o_eq_card_red {
+
+        background:
+            #fcebed;
+    }
+
+
+    .o_eq_progress_card {
+
+        margin-top:
+            16px;
+
+        padding:
+            24px
+            30px;
+
+        border-radius:
+            18px;
+
+        background:
+            #e7f7ef;
+
+
+        span {
+
+            color:
+                #4d5260;
+
+            font-weight:
+                600;
+        }
+
+
+        strong {
+
+            margin-left:
+                12px;
+
+            font-size:
+                28px;
+
+            color:
+                #151922;
+        }
+
+
+        small {
+
+            color:
+                #777e8b;
+        }
+    }
+
+
+    .o_eq_progress_blue {
+
+        background:
+            #edf3ff;
+    }
+
+
+    .o_eq_progress_track {
+
+        height:
+            10px;
+
+        overflow:
+            hidden;
+
+        border-radius:
+            99px;
+
+        background:
+            rgba(
+                75,
+                84,
+                96,
+                .12
+            );
+    }
+
+
+    .o_eq_progress_fill {
+
+        height:
+            100%;
+
+        border-radius:
+            inherit;
+
+        background:
+            #3ec28f;
+
+        transition:
+            width
+            .25s
+            ease;
+    }
+
+
+    .o_eq_progress_blue
+    .o_eq_progress_fill {
+
+        background:
+            #6f88c7;
+    }
+
+
+    .o_eq_analytics_grid,
+    .o_eq_details_grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+
+        gap: 18px;
+    }
+
+
+    .o_eq_panel {
+
+        padding:
+            20px
+            22px;
+
+        border:
+            1px
+            solid
+            #e7e8ec;
+
+        border-radius:
+            16px;
+
+        background:
+            #fff;
+
+        box-shadow:
+            0
+            1px
+            3px
+            rgba(
+                26,
+                31,
+                44,
+                .04
+            );
+
+
+        h4 {
+
+            margin:
+                0
+                0
+                18px;
+
+            font-size:
+                15px;
+
+            font-weight:
+                700;
+
+            color:
+                #343947;
+        }
+    }
+
+
+    .o_eq_donut_wrap {
+
+        min-height:
+            260px;
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        gap:
+            28px;
+
+        flex-wrap:
+            wrap;
+    }
+
+
+    .o_eq_donut {
+
+        position:
+            relative;
+
+        width:
+            190px;
+
+        height:
+            190px;
+
+        border-radius:
+            50%;
+
+
+        &::after {
+
+            content: "";
+
+            position:
+                absolute;
+
+            inset:
+                33px;
+
+            border-radius:
+                50%;
+
+            background:
+                #fff;
+        }
+    }
+
+
+    .o_eq_donut_center {
+
+        position:
+            absolute;
+
+        inset:
+            0;
+
+        z-index:
+            1;
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+
+        strong {
+
+            font-size:
+                30px;
+
+            color:
+                #20242d;
+        }
+
+
+        small {
+
+            color:
+                #8a909d;
+        }
+    }
+
+
+    .o_eq_legend {
+
+        display:
+            grid;
+
+        gap:
+            10px;
+
+        min-width:
+            165px;
+
+
+        > span {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                12px
+                1fr
+                auto;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+
+            color:
+                #5a606d;
+        }
+    }
+
+
+    .o_eq_dot {
+
+        width:
+            10px;
+
+        height:
+            10px;
+
+        border-radius:
+            2px;
+
+        display:
+            inline-block;
+    }
+
+
+    .o_eq_dot_green {
+
+        background:
+            #70cfa5;
+    }
+
+
+    .o_eq_dot_orange {
+
+        background:
+            #f0bd72;
+    }
+
+
+    .o_eq_dot_high {
+
+        background:
+            #e89a5b;
+    }
+
+
+    .o_eq_dot_red {
+
+        background:
+            #df7e86;
+    }
+
+
+    .o_eq_bar_list {
+
+        display:
+            grid;
+
+        gap:
+            15px;
+    }
+
+
+    .o_eq_bar_label {
+
+        display:
+            flex;
+
+        justify-content:
+            space-between;
+
+        gap:
+            12px;
+
+        margin-bottom:
+            5px;
+
+        color:
+            #555b68;
+
+        font-size:
+            13px;
+    }
+
+
+    .o_eq_bar_track {
+
+        height:
+            11px;
+
+        overflow:
+            hidden;
+
+        border-radius:
+            99px;
+
+        background:
+            #f0f1f4;
+    }
+
+
+    .o_eq_bar_fill {
+
+        height:
+            100%;
+
+        border-radius:
+            inherit;
+
+        background:
+            #9d7c98;
+    }
+
+
+    .o_eq_bar_fill_alt {
+
+        background:
+            #7994ca;
+    }
+
+
+    .o_eq_bar_fill_location {
+
+        background:
+            #67bda0;
+    }
+
+
+    .o_eq_trend {
+
+        height:
+            260px;
+
+        display:
+            flex;
+
+        align-items:
+            flex-end;
+
+        gap:
+            8px;
+
+        padding-top:
+            20px;
+    }
+
+
+    .o_eq_trend_item {
+
+        min-width:
+            20px;
+
+        flex:
+            1;
+
+        height:
+            100%;
+
+        display:
+            grid;
+
+        grid-template-rows:
+            18px
+            1fr
+            34px;
+
+        align-items:
+            end;
+
+        text-align:
+            center;
+
+
+        small {
+
+            padding-top:
+                6px;
+
+            color:
+                #8a909d;
+
+            font-size:
+                10px;
+
+            transform:
+                rotate(-35deg);
+
+            white-space:
+                nowrap;
+        }
+    }
+
+
+    .o_eq_trend_value {
+
+        font-size:
+            10px;
+
+        color:
+            #747b88;
+    }
+
+
+    .o_eq_trend_track {
+
+        height:
+            100%;
+
+        display:
+            flex;
+
+        align-items:
+            flex-end;
+
+        justify-content:
+            center;
+    }
+
+
+    .o_eq_trend_bar {
+
+        width:
+            65%;
+
+        min-height:
+            4px;
+
+        border-radius:
+            5px
+            5px
+            0
+            0;
+
+        background:
+            #9d7c98;
+    }
+
+
+    .o_eq_table {
+
+        margin-bottom:
+            0;
+
+        font-size:
+            13px;
+
+
+        thead th {
+
+            border-top:
+                0;
+
+            color:
+                #777e8b;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .03em;
+        }
+
+
+        td,
+        th {
+
+            vertical-align:
+                middle;
+        }
+    }
+
+
+    .o_eq_empty {
+
+        min-height:
+            180px;
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        color:
+            #969ca7;
+    }
+
+
+    @media (
+        max-width:
+        1200px
+    ) {
+
+        .o_eq_filter_grid,
+        .o_eq_cards_4 {
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
+        }
+    }
+
+
+    @media (
+        max-width:
+        768px
+    ) {
+
+        padding:
+            14px;
+
+
+        .o_eq_header {
+
+            flex-direction:
+                column;
+        }
+
+
+        .o_eq_filter_grid,
+        .o_eq_cards_4,
+        .o_eq_analytics_grid,
+        .o_eq_details_grid {
+
+            grid-template-columns:
+                1fr;
+        }
+
+
+        .o_eq_progress_card {
+
+            padding:
+                18px;
+        }
+    }
+
+    // =========================================================
+    // Interactive dashboard additions
+    // =========================================================
+
+    .o_eq_card_clickable {
+        cursor: pointer;
+        position: relative;
+        border: 1px solid transparent;
+        transition:
+            transform .18s ease,
+            box-shadow .18s ease,
+            border-color .18s ease;
+
+        &::after {
+            content: "\f08e";
+            font-family: FontAwesome;
+            position: absolute;
+            top: 18px;
+            right: 20px;
+            font-size: 13px;
+            opacity: 0;
+            color: #596171;
+            transform: translateY(3px);
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 24px rgba(26, 31, 44, .10);
+            border-color: rgba(80, 88, 104, .12);
+            outline: none;
+        }
+
+        &:hover::after,
+        &:focus-visible::after {
+            opacity: .75;
+            transform: translateY(0);
+        }
+
+        &:active {
+            transform: translateY(-1px);
+        }
+    }
+
+    .o_eq_donut {
+        transition: transform .20s ease, filter .20s ease;
+    }
+
+    .o_eq_donut_hovered {
+        transform: scale(1.045);
+        filter: drop-shadow(0 8px 12px rgba(26, 31, 44, .10));
+    }
+
+    .o_eq_donut_center strong,
+    .o_eq_donut_center small {
+        transition: transform .18s ease, opacity .18s ease;
+    }
+
+    .o_eq_legend_item {
+        border-radius: 10px;
+        padding: 8px 10px;
+        margin: -4px -10px;
+        transition: background .16s ease, transform .16s ease;
+
+        > span {
+            display: inline;
+            color: #5a606d;
+
+            small {
+                color: #969ca7;
+                font-size: 11px;
+            }
+        }
+    }
+
+    .o_eq_legend_clickable {
+        cursor: pointer;
+
+        &:hover,
+        &:focus-visible {
+            background: #f5f6f8;
+            transform: translateX(4px);
+            outline: none;
+        }
+
+        &:hover .o_eq_dot {
+            transform: scale(1.25);
+        }
+    }
+
+    .o_eq_dot {
+        transition: transform .16s ease;
+    }
+
+}

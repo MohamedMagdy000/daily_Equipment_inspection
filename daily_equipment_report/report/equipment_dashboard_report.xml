@@ -1,0 +1,728 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="paperformat_equipment_dashboard" model="report.paperformat">
+        <field name="name">Equipment Dashboard A4 Landscape</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">5</field>
+        <field name="margin_left">6</field>
+        <field name="margin_right">6</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_equipment_dashboard" model="ir.actions.report">
+        <field name="name">Equipment Dashboard</field>
+        <field name="model">equipment.inspection.dashboard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">daily_equipment_report.report_equipment_dashboard</field>
+        <field name="paperformat_id" ref="paperformat_equipment_dashboard"/>
+        <field name="print_report_name">'Equipment Dashboard'</field>
+    </record>
+
+    <template id="report_equipment_dashboard">
+        <t t-set="full_width" t-value="True"/>
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="d" t-value="dashboard"/>
+                <div class="page eq-dashboard-page">
+                    <style>
+                        .eq-dashboard-page {
+                            box-sizing: border-box;
+                            color: #252733;
+                            font-family: Arial, sans-serif;
+                            font-size: 8px;
+                            height: auto;
+                            line-height: 1.18;
+                            min-height: 198mm;
+                            overflow: visible;
+                            padding: 0;
+                            page-break-after: avoid !important;
+                            page-break-inside: avoid !important;
+                            max-width: none !important;
+                            width: 100% !important;
+                        }
+                        .eq-dashboard-page * { box-sizing: border-box; }
+                        .container, .container-fluid {
+                            max-width: none !important;
+                            width: 100% !important;
+                        }
+                        .o_body_html, #wrapwrap, main, .article {
+                            max-width: none !important;
+                            width: 100% !important;
+                        }
+                        .eq-header {
+                            align-items: center;
+                            background: #252733;
+                            border-radius: 10px;
+                            color: #fff;
+                            display: table;
+                            margin-bottom: 9px;
+                            padding: 10px 15px;
+                            width: 100%;
+                        }
+                        .eq-header-main, .eq-header-meta {
+                            display: table-cell;
+                            vertical-align: middle;
+                        }
+                        .eq-header-main { width: 66%; }
+                        .eq-header-meta {
+                            color: #d8dbe2;
+                            text-align: right;
+                            width: 34%;
+                        }
+                        .eq-header h1 {
+                            color: #fff;
+                            font-size: 19px;
+                            font-weight: 700;
+                            margin: 0 0 3px;
+                        }
+                        .eq-subtitle { color: #c5c9d1; font-size: 9.5px; }
+                        .eq-filter-bar {
+                            background: #fafafa;
+                            border: 1px solid #e7e8ec;
+                            border-radius: 8px;
+                            color: #666b77;
+                            margin-bottom: 8px;
+                            padding: 4px 9px;
+                        }
+                        .eq-chip {
+                            background: #eef2fa;
+                            border-radius: 8px;
+                            display: inline-block;
+                            margin: 1px 3px;
+                            padding: 2px 6px;
+                        }
+                        .eq-alert-row, .eq-card-row, .eq-analytics-grid,
+                        .eq-details-grid {
+                            border-collapse: separate;
+                            border-spacing: 6px;
+                            table-layout: fixed;
+                            width: 100%;
+                        }
+                        .eq-alert-row { margin-bottom: 4px; }
+                        .eq-alert-row td {
+                            border-radius: 7px;
+                            font-size: 6.5px;
+                            font-weight: 600;
+                            padding: 6px 8px;
+                            text-align: center;
+                        }
+                        .eq-alert-danger { background: #fde8e9; color: #a4383f; }
+                        .eq-alert-warning { background: #fff3da; color: #8c5c0a; }
+                        .eq-alert-info { background: #eaf3fb; color: #365d7b; }
+                        .eq-section-title {
+                            color: #545966;
+                            font-size: 8.5px;
+                            font-weight: 700;
+                            letter-spacing: .04em;
+                            margin: 8px 0 4px 5px;
+                            text-transform: uppercase;
+                        }
+                        .eq-card-row { margin-bottom: 1px; }
+                        .eq-card-row td, .eq-analytics-grid td,
+                        .eq-details-grid td {
+                            border: 0 !important;
+                            padding: 0;
+                            vertical-align: top;
+                        }
+                        .eq-card {
+                            border-radius: 12px;
+                            min-height: 51px;
+                            padding: 7px 10px;
+                        }
+                        .eq-card span { display: block; }
+                        .eq-card-label {
+                            color: #4d5260;
+                            font-size: 8.5px;
+                            font-weight: 600;
+                        }
+                        .eq-card-value {
+                            color: #141820;
+                            font-size: 18px;
+                            font-weight: 700;
+                            line-height: 1.05;
+                            margin: 3px 0 2px;
+                        }
+                        .eq-card-note { color: #818795; font-size: 7.5px; }
+                        .eq-peach { background: #fff0e6; }
+                        .eq-green { background: #e7f7ef; }
+                        .eq-blue { background: #e9f0ff; }
+                        .eq-red { background: #fcebed; }
+                        .eq-progress {
+                            border-radius: 10px;
+                            margin: 5px 6px 7px;
+                            padding: 5px 9px;
+                        }
+                        .eq-progress-green { background: #e7f7ef; }
+                        .eq-progress-blue { background: #edf3ff; }
+                        .eq-progress-head {
+                            color: #4d5260;
+                            margin-bottom: 2px;
+                        }
+                        .eq-progress-head strong { font-size: 9px; }
+                        .eq-progress-head .rate {
+                            color: #151922;
+                            font-size: 11px;
+                            font-weight: 700;
+                            margin-left: 8px;
+                        }
+                        .eq-progress-head .detail {
+                            color: #777e8b;
+                            float: right;
+                            font-size: 8px;
+                            padding-top: 3px;
+                        }
+                        .eq-progress-track {
+                            background: rgba(75, 84, 96, .12);
+                            border-radius: 99px;
+                            height: 6px;
+                            overflow: hidden;
+                        }
+                        .eq-progress-fill {
+                            border-radius: 99px;
+                            height: 6px;
+                        }
+                        .eq-progress-green .eq-progress-fill { background: #3ec28f; }
+                        .eq-progress-blue .eq-progress-fill { background: #6f88c7; }
+                        .eq-analytics-grid { border-spacing: 6px; }
+                        .eq-analytics-grid td { width: 33.333%; }
+                        .eq-panel {
+                            background: #fff;
+                            border: 1px solid #e7e8ec;
+                            border-radius: 12px;
+                            box-shadow: 0 1px 3px rgba(26, 31, 44, .04);
+                            height: 106px;
+                            padding: 8px 10px;
+                        }
+                        .eq-panel h4 {
+                            color: #343947;
+                            font-size: 7.5px;
+                            font-weight: 700;
+                            margin: 0 0 5px;
+                        }
+                        .eq-donut-layout {
+                            border-collapse: collapse;
+                            height: 68px;
+                            width: 100%;
+                        }
+                        .eq-donut-layout td {
+                            border: 0 !important;
+                            vertical-align: middle;
+                            width: auto;
+                        }
+                        .eq-donut {
+                            height: 59px;
+                            width: 59px;
+                        }
+                        .eq-donut-legend {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+                        .eq-donut-legend td {
+                            border: 0 !important;
+                            color: #606674;
+                            font-size: 7.5px;
+                            padding: 1px 3px;
+                        }
+                        .eq-donut-legend td:last-child {
+                            color: #252733;
+                            font-weight: 700;
+                            text-align: right;
+                        }
+                        .eq-dot {
+                            border-radius: 50%;
+                            display: inline-block;
+                            height: 6px;
+                            margin-right: 3px;
+                            width: 6px;
+                        }
+                        .eq-bar-list { width: 100%; }
+                        .eq-bar-row { margin: 1px 0; }
+                        .eq-bar-label {
+                            color: #555b67;
+                            font-size: 6px;
+                            line-height: 7px;
+                            margin-bottom: 1px;
+                            overflow: hidden;
+                            white-space: nowrap;
+                        }
+                        .eq-bar-label strong { color: #252733; float: right; }
+                        .eq-bar-track {
+                            background: #f0f1f4;
+                            border-radius: 5px;
+                            height: 4px;
+                            overflow: hidden;
+                        }
+                        .eq-bar-fill {
+                            background: #6f88c7;
+                            border-radius: 5px;
+                            height: 4px;
+                        }
+                        .eq-bar-fill-alt { background: #e89a5b; }
+                        .eq-bar-fill-location { background: #79b8a6; }
+                        .eq-trend {
+                            border-collapse: collapse;
+                            height: 65px;
+                            table-layout: fixed;
+                            width: 100%;
+                        }
+                        .eq-trend td {
+                            border: 0 !important;
+                            border-bottom: 1px solid #e7e8ec !important;
+                            padding: 0 1px;
+                            text-align: center;
+                            vertical-align: bottom;
+                            width: 8.33%;
+                        }
+                        .eq-trend-count {
+                            color: #727887;
+                            display: block;
+                            font-size: 6px;
+                            padding-bottom: 1px;
+                        }
+                        .eq-trend-bar {
+                            background: #6f88c7;
+                            border-radius: 3px 3px 0 0;
+                            display: block;
+                            margin: 0 auto;
+                            width: 62%;
+                        }
+                        .eq-trend-label {
+                            color: #818795;
+                            display: block;
+                            font-size: 6px;
+                            padding-top: 2px;
+                            white-space: nowrap;
+                        }
+                        .eq-detail-row {
+                            border-collapse: separate;
+                            border-spacing: 8px;
+                            table-layout: fixed;
+                            margin-bottom: 3px;
+                            width: 100%;
+                        }
+                        .eq-detail-row td {
+                            border: 0 !important;
+                            padding: 0;
+                            vertical-align: top;
+                            width: 25%;
+                        }
+                        .eq-summary-card {
+                            background: #fff;
+                            border: 1px solid #dfe3e9;
+                            border-radius: 10px;
+                            border-top: 3px solid #6f88c7;
+                            box-shadow: 0 1px 3px rgba(26, 31, 44, .05);
+                            height: 148px;
+                            min-height: 148px;
+                            padding: 12px 11px;
+                        }
+                        .eq-summary-critical {
+                            background: #fff8f8;
+                            border-top-color: #df7e86;
+                        }
+                        .eq-summary-attention {
+                            background: #fffbf4;
+                            border-top-color: #e89a5b;
+                        }
+                        .eq-summary-overdue {
+                            background: #fff8f8;
+                            border-top-color: #df7e86;
+                        }
+                        .eq-summary-maintenance {
+                            background: #f7f9ff;
+                            border-top-color: #6f88c7;
+                        }
+                        .eq-summary-header {
+                            color: #545966;
+                            font-size: 11px;
+                            font-weight: 700;
+                            line-height: 13px;
+                            margin-bottom: 12px;
+                        }
+                        .eq-summary-count {
+                            background: #eef2fa;
+                            border-radius: 8px;
+                            color: #5c6782;
+                            float: right;
+                            font-size: 10px;
+                            font-weight: 600;
+                            padding: 3px 7px;
+                        }
+                        .eq-summary-record {
+                            color: #252733;
+                            font-size: 13px;
+                            font-weight: 700;
+                            line-height: 16px;
+                            overflow: hidden;
+                            white-space: nowrap;
+                        }
+                        .eq-summary-info {
+                            color: #555b67;
+                            font-size: 11px;
+                            line-height: 15px;
+                            overflow: hidden;
+                            white-space: nowrap;
+                        }
+                        .eq-summary-info strong { color: #343947; }
+                        .eq-summary-more {
+                            color: #818795;
+                            font-size: 10px;
+                            font-style: italic;
+                            margin-top: 11px;
+                        }
+                        .eq-summary-empty {
+                            color: #818795;
+                            font-size: 11px;
+                            padding: 34px 3px;
+                        }
+                        .eq-status-badge {
+                            border-radius: 8px;
+                            display: inline-block;
+                            font-size: 6px;
+                            padding: 2px 4px;
+                        }
+                        .eq-status-out { background: #fcebed; color: #a4383f !important; }
+                        .eq-status-maint { background: #fff3da; color: #8c5c0a !important; }
+                    </style>
+
+                    <div class="eq-header">
+                        <div class="eq-header-main">
+                            <h1>Equipment Dashboard</h1>
+                            <div class="eq-subtitle">
+                                Operational overview, inspections, maintenance and equipment health
+                            </div>
+                        </div>
+                        <div class="eq-header-meta">
+                            <strong>Reporting period</strong>
+                            <span t-out="d['filters']['date_from']"/> – <span t-out="d['filters']['date_to']"/>
+                            <br/><span t-out="o.name"/> · Generated <span t-out="generated_at"/>
+                        </div>
+                    </div>
+
+                    <div class="eq-filter-bar">
+                        <strong>Filters:</strong>
+                        <span t-if="not filter_labels">All categories, equipment, locations and severities</span>
+                        <t t-foreach="filter_labels" t-as="filter_item">
+                            <span class="eq-chip">
+                                <strong t-out="filter_item[0]"/>: <span t-out="filter_item[1]"/>
+                            </span>
+                        </t>
+                    </div>
+
+                    <table class="eq-alert-row">
+                        <tr>
+                            <td t-if="d['alerts']['critical_inspections']" class="eq-alert-danger">
+                                <span t-out="d['alerts']['critical_inspections']"/> critical inspection failure(s)
+                            </td>
+                            <td t-if="d['alerts']['open_maintenance']" class="eq-alert-warning">
+                                <span t-out="d['alerts']['open_maintenance']"/> open maintenance request(s)
+                            </td>
+                            <td t-if="d['alerts']['out_of_service']" class="eq-alert-danger">
+                                <span t-out="d['alerts']['out_of_service']"/> equipment out of service
+                            </td>
+                            <td t-if="d['alerts']['overdue_parts']" class="eq-alert-warning">
+                                <span t-out="d['alerts']['overdue_parts']"/> spare-part item(s) overdue
+                            </td>
+                            <td t-if="d['alerts']['pending_approval']" class="eq-alert-info">
+                                <span t-out="d['alerts']['pending_approval']"/> inspection(s) waiting for approval
+                            </td>
+                            <td t-if="not d['alerts']['critical_inspections'] and not d['alerts']['open_maintenance'] and not d['alerts']['out_of_service'] and not d['alerts']['overdue_parts'] and not d['alerts']['pending_approval']"
+                                colspan="5" class="eq-alert-info">
+                                No active dashboard alerts
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="eq-section-title">Equipment</div>
+                    <table class="eq-card-row">
+                        <tr>
+                            <td><div class="eq-card eq-peach">
+                                <span class="eq-card-label">Total Equipment</span>
+                                <span class="eq-card-value" t-out="d['equipment']['total']"/>
+                                <span class="eq-card-note">Registered equipment</span>
+                            </div></td>
+                            <td><div class="eq-card eq-green">
+                                <span class="eq-card-label">Active</span>
+                                <span class="eq-card-value" t-out="d['equipment']['active']"/>
+                                <span class="eq-card-note">Operational</span>
+                            </div></td>
+                            <td><div class="eq-card eq-blue">
+                                <span class="eq-card-label">Under Maintenance</span>
+                                <span class="eq-card-value" t-out="d['equipment']['maintenance']"/>
+                                <span class="eq-card-note">Currently serviced</span>
+                            </div></td>
+                            <td><div class="eq-card eq-red">
+                                <span class="eq-card-label">Out of Service</span>
+                                <span class="eq-card-value" t-out="d['equipment']['out_of_service']"/>
+                                <span class="eq-card-note">Require attention</span>
+                            </div></td>
+                        </tr>
+                    </table>
+                    <div class="eq-progress eq-progress-green">
+                        <div class="eq-progress-head">
+                            <strong>Equipment Availability</strong>
+                            <span class="rate"><span t-out="d['equipment']['availability_rate']"/>%</span>
+                            <span class="detail"><span t-out="d['equipment']['active']"/> of <span t-out="d['equipment']['total']"/> equipment operational</span>
+                        </div>
+                        <div class="eq-progress-track">
+                            <div class="eq-progress-fill" t-att-style="availability_style"/>
+                        </div>
+                    </div>
+
+                    <div class="eq-section-title">Inspections</div>
+                    <table class="eq-card-row">
+                        <tr>
+                            <td><div class="eq-card eq-blue">
+                                <span class="eq-card-label">Inspections Today</span>
+                                <span class="eq-card-value" t-out="d['inspections']['today']"/>
+                                <span class="eq-card-note">Created today</span>
+                            </div></td>
+                            <td><div class="eq-card eq-peach">
+                                <span class="eq-card-label">Pending Approval</span>
+                                <span class="eq-card-value" t-out="d['inspections']['submitted']"/>
+                                <span class="eq-card-note">Submitted reports</span>
+                            </div></td>
+                            <td><div class="eq-card eq-red">
+                                <span class="eq-card-label">Failed Inspections</span>
+                                <span class="eq-card-value" t-out="d['inspections']['failed']"/>
+                                <span class="eq-card-note">With at least one defect</span>
+                            </div></td>
+                            <td><div class="eq-card eq-red">
+                                <span class="eq-card-label">Critical Inspections</span>
+                                <span class="eq-card-value" t-out="d['inspections']['critical']"/>
+                                <span class="eq-card-note">Critical failure detected</span>
+                            </div></td>
+                        </tr>
+                    </table>
+                    <div class="eq-progress eq-progress-blue">
+                        <div class="eq-progress-head">
+                            <strong>Inspection Pass Rate</strong>
+                            <span class="rate"><span t-out="d['inspections']['pass_rate']"/>%</span>
+                            <span class="detail"><span t-out="d['inspections']['total']"/> inspections in selected period</span>
+                        </div>
+                        <div class="eq-progress-track">
+                            <div class="eq-progress-fill" t-att-style="pass_rate_style"/>
+                        </div>
+                    </div>
+
+                    <div class="eq-section-title">Maintenance &amp; Spare Parts</div>
+                    <table class="eq-card-row">
+                        <tr>
+                            <td><div class="eq-card eq-blue">
+                                <span class="eq-card-label">Open Requests</span>
+                                <span class="eq-card-value" t-out="d['maintenance']['open']"/>
+                                <span class="eq-card-note">Inspection-generated maintenance</span>
+                            </div></td>
+                            <td><div class="eq-card eq-red">
+                                <span class="eq-card-label">Critical Requests</span>
+                                <span class="eq-card-value" t-out="d['maintenance']['critical']"/>
+                                <span class="eq-card-note">Critical failure severity</span>
+                            </div></td>
+                            <td><div class="eq-card eq-peach">
+                                <span class="eq-card-label">Parts Due Soon</span>
+                                <span class="eq-card-value" t-out="d['spare_parts']['due_soon']"/>
+                                <span class="eq-card-note">Due within 7 days</span>
+                            </div></td>
+                            <td><div class="eq-card eq-red">
+                                <span class="eq-card-label">Overdue Parts</span>
+                                <span class="eq-card-value" t-out="d['spare_parts']['overdue']"/>
+                                <span class="eq-card-note">Past maintenance date</span>
+                            </div></td>
+                        </tr>
+                    </table>
+
+                    <div class="eq-section-title">Analytics</div>
+                    <table class="eq-analytics-grid">
+                        <tr>
+                            <td>
+                                <div class="eq-panel">
+                                    <h4>Equipment Status</h4>
+                                    <table class="eq-donut-layout">
+                                        <tr>
+                                            <td>
+                                                <svg class="eq-donut" viewBox="0 0 50 50" role="img">
+                                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#edf0f4" stroke-width="8"/>
+                                                    <circle t-foreach="equipment_segments" t-as="segment"
+                                                            cx="25" cy="25" r="20" fill="none"
+                                                            t-att-stroke="segment['color']"
+                                                            stroke-width="8" stroke-linecap="butt"
+                                                            t-att-stroke-dasharray="segment['dasharray']"
+                                                            t-att-stroke-dashoffset="segment['dashoffset']"
+                                                            transform="rotate(-90 25 25)"/>
+                                                    <text x="25" y="24" text-anchor="middle" font-size="8" font-weight="bold" fill="#20242d" t-out="d['equipment']['total']"/>
+                                                    <text x="25" y="31" text-anchor="middle" font-size="4" fill="#8a909d">Total</text>
+                                                </svg>
+                                            </td>
+                                            <td>
+                                                <table class="eq-donut-legend">
+                                                    <tr t-foreach="equipment_segments" t-as="segment">
+                                                        <td><span class="eq-dot" t-att-style="'background:' + segment['color']"/> <span t-out="segment['label']"/> (<span t-out="segment['percent']"/>%)</td>
+                                                        <td t-out="segment['count']"/>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-panel">
+                                    <h4>Failure Severity</h4>
+                                    <table class="eq-donut-layout">
+                                        <tr>
+                                            <td>
+                                                <svg class="eq-donut" viewBox="0 0 50 50" role="img">
+                                                    <circle cx="25" cy="25" r="20" fill="none" stroke="#edf0f4" stroke-width="8"/>
+                                                    <circle t-foreach="severity_segments" t-as="segment"
+                                                            cx="25" cy="25" r="20" fill="none"
+                                                            t-att-stroke="segment['color']"
+                                                            stroke-width="8" stroke-linecap="butt"
+                                                            t-att-stroke-dasharray="segment['dasharray']"
+                                                            t-att-stroke-dashoffset="segment['dashoffset']"
+                                                            transform="rotate(-90 25 25)"/>
+                                                    <text x="25" y="24" text-anchor="middle" font-size="8" font-weight="bold" fill="#20242d" t-out="d['analytics']['severity']['total']"/>
+                                                    <text x="25" y="31" text-anchor="middle" font-size="4" fill="#8a909d">Failures</text>
+                                                </svg>
+                                            </td>
+                                            <td>
+                                                <table class="eq-donut-legend">
+                                                    <tr t-foreach="severity_segments" t-as="segment">
+                                                        <td><span class="eq-dot" t-att-style="'background:' + segment['color']"/> <span t-out="segment['label']"/> (<span t-out="segment['percent']"/>%)</td>
+                                                        <td t-out="segment['count']"/>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-panel">
+                                    <h4>Top Defects</h4>
+                                    <div class="eq-bar-list">
+                                        <div class="eq-bar-row" t-foreach="top_defects" t-as="row">
+                                            <div class="eq-bar-label"><span t-out="row['label']"/><strong t-out="row['count']"/></div>
+                                            <div class="eq-bar-track"><div class="eq-bar-fill" t-att-style="row['width_style']"/></div>
+                                        </div>
+                                        <div class="eq-empty" t-if="not top_defects">No failed checks in this period.</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="eq-panel">
+                                    <h4>Failed Inspections by Category</h4>
+                                    <div class="eq-bar-list">
+                                        <div class="eq-bar-row" t-foreach="category_bars" t-as="row">
+                                            <div class="eq-bar-label"><span t-out="row['label']"/><strong t-out="row['count']"/></div>
+                                            <div class="eq-bar-track"><div class="eq-bar-fill eq-bar-fill-alt" t-att-style="row['width_style']"/></div>
+                                        </div>
+                                        <div class="eq-empty" t-if="not category_bars">No failed inspections by category.</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-panel">
+                                    <h4>Failures by Location</h4>
+                                    <div class="eq-bar-list">
+                                        <div class="eq-bar-row" t-foreach="location_bars" t-as="row">
+                                            <div class="eq-bar-label"><span t-out="row['label']"/><strong t-out="row['count']"/></div>
+                                            <div class="eq-bar-track"><div class="eq-bar-fill eq-bar-fill-location" t-att-style="row['width_style']"/></div>
+                                        </div>
+                                        <div class="eq-empty" t-if="not location_bars">No location failure data.</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-panel">
+                                    <h4>Inspection Trend</h4>
+                                    <table class="eq-trend">
+                                        <tr>
+                                            <td t-foreach="trend_bars" t-as="row">
+                                                <span class="eq-trend-count" t-out="row['count']"/>
+                                                <span class="eq-trend-bar" t-att-style="'height: %spx' % row['height']"/>
+                                                <span class="eq-trend-label" t-out="row['label']"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="eq-section-title">Details</div>
+                    <table class="eq-detail-row">
+                        <tr>
+                            <td>
+                                <div class="eq-summary-card eq-summary-critical">
+                                    <div class="eq-summary-header">Critical Inspections <span class="eq-summary-count"><span t-out="detail_summary['recent_critical']['total']"/> total</span></div>
+                                    <div t-if="not recent_critical" class="eq-summary-empty">No critical inspections.</div>
+                                    <t t-foreach="recent_critical" t-as="row">
+                                        <div class="eq-summary-record"><span t-out="row['equipment']"/> <span class="eq-summary-info" t-out="row['date']"/></div>
+                                        <div class="eq-summary-info"><strong>Issue:</strong> <span t-out="row['defects'] or 'Critical issue reported'"/></div>
+                                        <div class="eq-summary-info"><span t-out="row['name']"/> · <span t-out="row['inspector']"/></div>
+                                    </t>
+                                    <div t-if="detail_summary['recent_critical']['more']" class="eq-summary-more">
+                                        + <span t-out="detail_summary['recent_critical']['more']"/> more records not shown
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-summary-card eq-summary-attention">
+                                    <div class="eq-summary-header">Equipment Attention <span class="eq-summary-count"><span t-out="detail_summary['equipment_attention']['total']"/> total</span></div>
+                                    <div t-if="not equipment_attention" class="eq-summary-empty">No equipment requires attention.</div>
+                                    <t t-foreach="equipment_attention" t-as="row">
+                                        <div class="eq-summary-record">
+                                            <span t-out="row['name']"/>
+                                            <span t-att-class="'eq-status-badge ' + ('eq-status-out' if row['status'] == 'out_of_service' else 'eq-status-maint')"
+                                                  t-out="'Out of Service' if row['status'] == 'out_of_service' else 'Under Maintenance'"/>
+                                        </div>
+                                        <div class="eq-summary-info"><strong>Location:</strong> <span t-out="row['location'] or 'Not set'"/></div>
+                                        <div class="eq-summary-info"><strong>Open requests:</strong> <span t-out="row['open_maintenance']"/> · <strong>Last check:</strong> <span t-out="row['last_inspection'] or 'N/A'"/></div>
+                                    </t>
+                                    <div t-if="detail_summary['equipment_attention']['more']" class="eq-summary-more">
+                                        + <span t-out="detail_summary['equipment_attention']['more']"/> more records not shown
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-summary-card eq-summary-overdue">
+                                    <div class="eq-summary-header">Overdue Spare Parts <span class="eq-summary-count"><span t-out="detail_summary['overdue_parts']['total']"/> total</span></div>
+                                    <div t-if="not overdue_parts" class="eq-summary-empty">No overdue spare-part maintenance.</div>
+                                    <t t-foreach="overdue_parts" t-as="row">
+                                        <div class="eq-summary-record"><span t-out="row['name']"/> <span class="eq-status-badge eq-status-out"><span t-out="row['days_overdue']"/> days overdue</span></div>
+                                        <div class="eq-summary-info"><strong>Equipment:</strong> <span t-out="row['equipment']"/></div>
+                                        <div class="eq-summary-info"><strong>Due date:</strong> <span t-out="row['next_date']"/></div>
+                                    </t>
+                                    <div t-if="detail_summary['overdue_parts']['more']" class="eq-summary-more">
+                                        + <span t-out="detail_summary['overdue_parts']['more']"/> more records not shown
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="eq-summary-card eq-summary-maintenance">
+                                    <div class="eq-summary-header">Open Maintenance Requests <span class="eq-summary-count"><span t-out="detail_summary['recent_maintenance']['total']"/> total</span></div>
+                                    <div t-if="not recent_maintenance" class="eq-summary-empty">No open inspection-generated requests.</div>
+                                    <t t-foreach="recent_maintenance" t-as="row">
+                                        <div class="eq-summary-record"><span t-out="row['equipment'] or row['name']"/> <span class="eq-status-badge eq-status-maint" t-out="row['severity'] or 'Normal'"/></div>
+                                        <div class="eq-summary-info"><strong>Stage:</strong> <span t-out="row['stage'] or 'Not set'"/></div>
+                                        <div class="eq-summary-info"><strong>Technician:</strong> <span t-out="row['technician']"/></div>
+                                    </t>
+                                    <div t-if="detail_summary['recent_maintenance']['more']" class="eq-summary-more">
+                                        + <span t-out="detail_summary['recent_maintenance']['more']"/> more records not shown
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

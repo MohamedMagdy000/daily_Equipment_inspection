@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_equipment_form_add_inspection_maintenance" model="ir.ui.view">
+        <field name="name">maintenance.equipment.form.add.inspection.maintenance</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="daily_equipment_report.view_daily_inspection_equipment_form"/>
+
+        <field name="priority">30</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']"
+                   position="inside">
+
+                <button name="action_view_inspection_maintenance_requests"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-wrench"
+                        invisible="inspection_maintenance_request_count == 0">
+
+                    <field name="inspection_maintenance_request_count"
+                           widget="statinfo"
+                           string="Maintenance"/>
+
+                </button>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+    <record id="view_daily_report_form_add_maintenance_requests" model="ir.ui.view">
+
+        <field name="name">equipment.daily.report.form.add.maintenance.requests</field>
+        <field name="model">equipment.daily.report</field>
+        <field name="inherit_id" ref="daily_equipment_report.view_equipment_daily_report_form"/>
+        <field name="priority">30</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[hasclass('oe_title')]"
+                   position="before">
+
+                <div class="oe_button_box"
+                     name="button_box">
+
+                    <button name="action_view_maintenance_requests"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-wrench"
+                            invisible="maintenance_request_count == 0">
+
+                        <field name="maintenance_request_count"
+                               widget="statinfo"
+                               string="Maintenance"/>
+
+                    </button>
+
+                </div>
+
+            </xpath>
+
+            <xpath expr="//field[@name='line_ids']/list/field[@name='issue_description']"
+                   position="after">
+
+                <field name="maintenance_request_count"
+                       string="Requests"
+                       readonly="1"
+                       optional="show"/>
+
+                <button name="action_open_maintenance_request"
+                        type="object"
+                        string="Open Request"
+                        icon="fa-external-link"
+                        invisible="maintenance_request_count == 0"/>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+
+    <record id="view_maintenance_request_form_inspection_origin" model="ir.ui.view">
+
+        <field name="name">maintenance.request.form.inspection.origin</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id"
+               ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="priority">30</field>
+
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//sheet/*[1]" position="before">
+
+                <div class="oe_button_box" name="button_box">
+
+                    <button name="action_open_inspection_report"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-clipboard"
+                            invisible="inspection_report_count == 0">
+
+                        <field name="inspection_report_count"
+                               widget="statinfo"
+                               string="Inspection"/>
+
+                    </button>
+
+                </div>
+
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+
+                <page string="Inspection Origin"
+                      name="inspection_origin"
+                      invisible="not is_inspection_generated">
+
+                    <field name="is_inspection_generated"
+                           invisible="1"/>
+
+                    <field name="inspection_report_count"
+                           invisible="1"/>
+
+                    <group>
+
+                        <group string="Source Inspection">
+
+                            <field name="inspection_report_id"
+                                   readonly="1"
+                                   options="{
+                                       'no_create': true,
+                                       'no_open': false
+                                   }"/>
+
+                            <field name="inspection_line_id"
+                                   readonly="1"
+                                   options="{
+                                       'no_create': true,
+                                       'no_open': true
+                                   }"/>
+
+                            <field name="inspection_question_id"
+                                   readonly="1"
+                                   options="{
+                                       'no_create': true,
+                                       'no_open': true
+                                   }"/>
+
+                            <field name="inspection_failure_severity"
+                                   widget="badge"
+                                   readonly="1"
+                                   decoration-info="inspection_failure_severity == 'low'"
+                                   decoration-warning="inspection_failure_severity == 'medium'"
+                                   decoration-primary="inspection_failure_severity == 'high'"
+                                   decoration-danger="inspection_failure_severity == 'critical'"/>
+
+                        </group>
+
+                        <group string="Reported Failure">
+
+                            <field name="inspection_issue_description"
+                                   readonly="1"/>
+
+                            <field name="inspection_image"
+                                   widget="image"
+                                   readonly="1"
+                                   options="{
+                                       'preview_image': 'inspection_image',
+                                       'zoom': true
+                                   }"/>
+
+                        </group>
+
+                    </group>
+
+                </page>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+
+    <record id="view_maintenance_request_list_inspection_origin" model="ir.ui.view">
+
+        <field name="name">maintenance.request.list.inspection.origin</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_tree"/>
+
+        <field name="priority">30</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='name']"
+                   position="after">
+
+                <field name="inspection_report_id"
+                       string="Inspection"
+                       optional="hide"/>
+
+                <field name="inspection_question_id"
+                       string="Failed Check"
+                       optional="hide"/>
+
+                <field name="inspection_failure_severity"
+                       string="Failure Severity"
+                       widget="badge"
+                       optional="show"
+                       decoration-info="inspection_failure_severity == 'low'"
+                       decoration-warning="inspection_failure_severity == 'medium'"
+                       decoration-primary="inspection_failure_severity == 'high'"
+                       decoration-danger="inspection_failure_severity == 'critical'"/>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+
+    <record id="view_maintenance_request_search_inspection_origin" model="ir.ui.view">
+        <field name="name">maintenance.request.search.inspection.origin</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_search"/>
+        <field name="priority">30</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//search"
+                   position="inside">
+
+                <field name="inspection_report_id"/>
+
+                <field name="inspection_question_id"/>
+
+                <field name="inspection_failure_severity"/>
+
+                <separator/>
+
+                <filter string="From Inspections"
+                        name="from_inspection"
+                        domain="[('is_inspection_generated', '=', True)]"/>
+
+                <filter string="High Inspection Failures"
+                        name="high_inspection_failures"
+                        domain="[
+                            ('is_inspection_generated', '=', True),
+                            ('inspection_failure_severity', '=', 'high')
+                        ]"/>
+
+                <filter string="Critical Inspection Failures"
+                        name="critical_inspection_failures"
+                        domain="[
+                            ('is_inspection_generated', '=', True),
+                            ('inspection_failure_severity', '=', 'critical')
+                        ]"/>
+
+                <separator/>
+
+                <filter string="Inspection Report"
+                        name="group_inspection_report"
+                        context="{'group_by': 'inspection_report_id'}"/>
+
+                <filter string="Failure Severity"
+                        name="group_inspection_failure_severity"
+                        context="{'group_by': 'inspection_failure_severity'}"/>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>

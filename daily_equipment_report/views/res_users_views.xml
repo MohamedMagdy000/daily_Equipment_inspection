@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_users_form_equipment_category_access" model="ir.ui.view">
+
+        <field name="name">res.users.form.equipment.category.access</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="priority">30</field>
+
+        <field name="arch" type="xml">
+
+            <xpath expr="//notebook" position="inside">
+
+                <page string="Equipment Access"
+                      name="equipment_category_access">
+
+                    <group>
+
+                        <group string="Allowed Categories">
+
+                            <field name="allowed_equipment_category_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create_edit': true}"/>
+
+                        </group>
+
+                    </group>
+
+                    <div class="alert alert-info"
+                         role="alert">
+
+                        Inspection Users can only access equipment
+                        belonging to the selected categories.
+                        Inspection Managers have unrestricted access.
+
+                    </div>
+
+                </page>
+
+            </xpath>
+
+        </field>
+
+    </record>
+
+</odoo>

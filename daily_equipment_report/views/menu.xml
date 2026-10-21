@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <menuitem id="menu_equipment_root"
+              name="Equipment Inspections"
+              sequence="10"
+              groups="daily_equipment_report.group_equipment_user"
+              web_icon="daily_equipment_report,static/description/icon.png"/>
+
+    <menuitem id="menu_equipment_dashboard"
+              name="Dashboard"
+              parent="menu_equipment_root"
+              action="action_equipment_dashboard"
+              sequence="5"/>
+
+
+    <menuitem id="menu_equipment_registry"
+              name="Equipment"
+              parent="menu_equipment_root"
+              action="action_maintenance_equipment_daily_inspection"
+              sequence="10"/>
+
+
+
+    <menuitem id="menu_equipment_inspections"
+              name="Inspections"
+              parent="menu_equipment_root"
+              sequence="20"/>
+
+
+    <menuitem id="menu_equipment_daily_report"
+              name="Daily Inspections"
+              parent="menu_equipment_inspections"
+              action="action_equipment_daily_report"
+              sequence="10"/>
+
+
+
+
+    <menuitem id="menu_equipment_maintenance"
+              name="Maintenance"
+              parent="menu_equipment_root"
+              sequence="30"/>
+
+
+    <menuitem id="menu_equipment_maintenance_requests"
+              name="Maintenance Requests"
+              parent="menu_equipment_maintenance"
+              action="maintenance.hr_equipment_request_action"
+              sequence="10"/>
+
+
+    <menuitem id="menu_equipment_spare_parts"
+              name="Spare Parts"
+              parent="menu_equipment_maintenance"
+              action="action_equipment_spare_part"
+              sequence="20"/>
+
+
+
+    <menuitem id="menu_equipment_configuration"
+              name="Configuration"
+              parent="menu_equipment_root"
+              sequence="90"
+              groups="daily_equipment_report.group_equipment_manager"/>
+
+
+    <menuitem id="menu_equipment_category"
+              name="Equipment Categories"
+              parent="menu_equipment_configuration"
+              action="action_equipment_category"
+              sequence="10"/>
+
+
+    <menuitem id="menu_equipment_questions"
+              name="Inspection Questions"
+              parent="menu_equipment_configuration"
+              action="action_equipment_checklist_question"
+              sequence="20"/>
+
+</odoo>

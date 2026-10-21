@@ -1,0 +1,1493 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="daily_equipment_report.EquipmentInspectionDashboard">
+
+        <t t-set="state" t-value="this.state"/>
+
+        <div class="o_equipment_dashboard">
+
+            <t t-if="state.loading">
+
+                <div class="o_eq_loading">
+
+                    <i class="fa fa-spinner fa-spin me-2"/>
+
+                    Loading equipment dashboard...
+
+                </div>
+
+            </t>
+
+            <t t-elif="state.data">
+
+
+                <div class="o_eq_header">
+
+                    <div>
+
+                        <h2>
+
+                            <i class="fa fa-dashboard me-2"/>
+
+                            Equipment Dashboard
+
+                        </h2>
+
+                        <div class="text-muted">
+
+                            Operational overview,
+                            inspections, maintenance
+                            and equipment health.
+
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-secondary"
+                                t-att-disabled="state.printing"
+                                t-on-click="this.printDashboard">
+                            <i t-att-class="state.printing ? 'fa fa-spinner fa-spin me-1' : 'fa fa-file-pdf-o me-1'"/>
+                            <t t-esc="state.printing ? 'Preparing PDF...' : 'Print'"/>
+                        </button>
+
+                        <button class="btn btn-primary"
+                                t-on-click="this.loadDashboard">
+                            <i class="fa fa-refresh me-1"/>
+                            Refresh
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <div class="o_eq_filter_panel">
+
+                    <div class="o_eq_filter_grid">
+
+                        <!-- Category -->
+                        <div class="o_eq_filter_item">
+
+                            <label>Category</label>
+
+                            <select class="form-select"
+                                    t-on-change="this.onCategoryChange">
+
+                                <option value=""
+                                        t-att-selected="!state.filters.category_id">
+
+                                    All Categories
+
+                                </option>
+
+                                <t t-foreach="state.data.filter_options.categories"
+                                   t-as="item"
+                                   t-key="item.id">
+
+                                    <option t-att-value="item.id"
+                                            t-att-selected="state.filters.category_id === item.id">
+
+                                        <t t-esc="item.name"/>
+
+                                    </option>
+
+                                </t>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Equipment -->
+                        <div class="o_eq_filter_item">
+
+                            <label>Equipment</label>
+
+                            <select class="form-select"
+                                    t-on-change="this.onEquipmentChange">
+
+                                <option value=""
+                                        t-att-selected="!state.filters.equipment_id">
+
+                                    All Equipment
+
+                                </option>
+
+                                <t t-foreach="this.filteredEquipmentOptions"
+                                   t-as="item"
+                                   t-key="item.id">
+
+                                    <option t-att-value="item.id"
+                                            t-att-selected="state.filters.equipment_id === item.id">
+
+                                        <t t-esc="item.name"/>
+
+                                    </option>
+
+                                </t>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Location -->
+                        <div class="o_eq_filter_item">
+
+                            <label>Location</label>
+
+                            <select class="form-select"
+                                    t-on-change="this.onLocationChange">
+
+                                <option value=""
+                                        t-att-selected="!state.filters.location">
+
+                                    All Locations
+
+                                </option>
+
+                                <t t-foreach="state.data.filter_options.locations"
+                                   t-as="item"
+                                   t-key="item">
+
+                                    <option t-att-value="item"
+                                            t-att-selected="state.filters.location === item">
+
+                                        <t t-esc="item"/>
+
+                                    </option>
+
+                                </t>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Severity -->
+                        <div class="o_eq_filter_item">
+
+                            <label>Severity</label>
+
+                            <select class="form-select"
+                                    t-on-change="this.onSeverityChange">
+
+                                <option value=""
+                                        t-att-selected="!state.filters.severity">
+
+                                    All Severities
+
+                                </option>
+
+                                <t t-foreach="state.data.filter_options.severities"
+                                   t-as="item"
+                                   t-key="item.value">
+
+                                    <option t-att-value="item.value"
+                                            t-att-selected="state.filters.severity === item.value">
+
+                                        <t t-esc="item.label"/>
+
+                                    </option>
+
+                                </t>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- Operational Status -->
+                        <div class="o_eq_filter_item">
+
+                            <label>Equipment Status</label>
+
+                            <select class="form-select"
+                                    t-on-change="this.onOperationalStatusChange">
+
+                                <option value=""
+                                        t-att-selected="!state.filters.operational_status">
+
+                                    All Statuses
+
+                                </option>
+
+                                <t t-foreach="state.data.filter_options.operational_statuses"
+                                   t-as="item"
+                                   t-key="item.value">
+
+                                    <option t-att-value="item.value"
+                                            t-att-selected="state.filters.operational_status === item.value">
+
+                                        <t t-esc="item.label"/>
+
+                                    </option>
+
+                                </t>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- From -->
+                        <div class="o_eq_filter_item">
+
+                            <label>From</label>
+
+                            <input class="form-control"
+                                   type="date"
+                                   t-att-value="state.filters.date_from"
+                                   t-on-change="this.onDateFromChange"/>
+
+                        </div>
+
+
+                        <!-- To -->
+                        <div class="o_eq_filter_item">
+
+                            <label>To</label>
+
+                            <input class="form-control"
+                                   type="date"
+                                   t-att-value="state.filters.date_to"
+                                   t-on-change="this.onDateToChange"/>
+
+                        </div>
+
+
+                        <!-- Buttons -->
+                        <div class="o_eq_filter_actions">
+
+                            <button class="btn btn-primary"
+                                    t-on-click="this.applyFilters">
+
+                                <i class="fa fa-filter me-1"/>
+
+                                Apply
+
+                            </button>
+
+                            <button class="btn btn-secondary"
+                                    t-on-click="this.resetFilters">
+
+                                Reset
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="o_eq_alerts">
+
+                    <div class="o_eq_alert o_eq_alert_danger"
+                         t-if="state.data.alerts.critical_inspections">
+
+                        <i class="fa fa-exclamation-circle"/>
+
+                        <span>
+
+                            <strong t-esc="state.data.alerts.critical_inspections"/>
+
+                            critical inspection failure(s)
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="o_eq_alert o_eq_alert_warning"
+                         t-if="state.data.alerts.open_maintenance">
+
+                        <i class="fa fa-wrench"/>
+
+                        <span>
+
+                            <strong t-esc="state.data.alerts.open_maintenance"/>
+
+                            open inspection maintenance request(s)
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="o_eq_alert o_eq_alert_danger"
+                         t-if="state.data.alerts.out_of_service">
+
+                        <i class="fa fa-ban"/>
+
+                        <span>
+
+                            <strong t-esc="state.data.alerts.out_of_service"/>
+
+                            equipment out of service
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="o_eq_alert o_eq_alert_warning"
+                         t-if="state.data.alerts.overdue_parts">
+
+                        <i class="fa fa-clock-o"/>
+
+                        <span>
+
+                            <strong t-esc="state.data.alerts.overdue_parts"/>
+
+                            spare-part maintenance item(s) overdue
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="o_eq_alert o_eq_alert_info"
+                         t-if="state.data.alerts.pending_approval">
+
+                        <i class="fa fa-check-square-o"/>
+
+                        <span>
+
+                            <strong t-esc="state.data.alerts.pending_approval"/>
+
+                            inspection(s) waiting for approval
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+
+                <section class="o_eq_section">
+
+                    <h3>
+
+                        <i class="fa fa-truck me-2"/>
+
+                        EQUIPMENT
+
+                    </h3>
+
+
+                    <div class="o_eq_cards o_eq_cards_4">
+
+
+                        <div class="o_eq_card o_eq_card_peach o_eq_card_clickable"
+                             role="button"
+                             title="Open equipment list"
+                             t-on-click="this.openEquipmentList">
+
+                            <span>Total Equipment</span>
+
+                            <strong t-esc="state.data.equipment.total"/>
+
+                            <small>
+                                Registered equipment
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_green o_eq_card_clickable"
+                             role="button"
+                             title="Open active equipment"
+                             data-status="active"
+                             t-on-click="this.openEquipmentList">
+
+                            <span>Active</span>
+
+                            <strong t-esc="state.data.equipment.active"/>
+
+                            <small>
+                                Operational
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_blue o_eq_card_clickable"
+                             role="button"
+                             title="Open equipment under maintenance"
+                             data-status="maintenance"
+                             t-on-click="this.openEquipmentList">
+
+                            <span>
+                                Under Maintenance
+                            </span>
+
+                            <strong t-esc="state.data.equipment.maintenance"/>
+
+                            <small>
+                                Currently serviced
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_red o_eq_card_clickable"
+                             role="button"
+                             title="Open out of service equipment"
+                             data-status="out_of_service"
+                             t-on-click="this.openEquipmentList">
+
+                            <span>
+                                Out of Service
+                            </span>
+
+                            <strong t-esc="state.data.equipment.out_of_service"/>
+
+                            <small>
+                                Require attention
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Availability -->
+
+                    <div class="o_eq_progress_card">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <div>
+
+                                <span>
+                                    Equipment Availability
+                                </span>
+
+                                <strong>
+
+                                    <t t-esc="state.data.equipment.availability_rate"/>%
+
+                                </strong>
+
+                            </div>
+
+                            <small>
+
+                                <t t-esc="state.data.equipment.active"/>
+
+                                of
+
+                                <t t-esc="state.data.equipment.total"/>
+
+                                equipment operational
+
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_progress_track">
+
+                            <div class="o_eq_progress_fill"
+                                 t-att-style="'width:' + this.percent(state.data.equipment.availability_rate)"/>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="o_eq_section">
+
+                    <h3>
+
+                        <i class="fa fa-clipboard me-2"/>
+
+                        INSPECTIONS
+
+                    </h3>
+
+
+                    <div class="o_eq_cards o_eq_cards_4">
+
+
+                        <div class="o_eq_card o_eq_card_blue">
+
+                            <span>
+                                Inspections Today
+                            </span>
+
+                            <strong t-esc="state.data.inspections.today"/>
+
+                            <small>
+                                Created today
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_peach">
+
+                            <span>
+                                Pending Approval
+                            </span>
+
+                            <strong t-esc="state.data.inspections.submitted"/>
+
+                            <small>
+                                Submitted reports
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_red">
+
+                            <span>
+                                Failed Inspections
+                            </span>
+
+                            <strong t-esc="state.data.inspections.failed"/>
+
+                            <small>
+                                With at least one defect
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_red">
+
+                            <span>
+                                Critical Inspections
+                            </span>
+
+                            <strong t-esc="state.data.inspections.critical"/>
+
+                            <small>
+                                Critical failure detected
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="o_eq_progress_card o_eq_progress_blue">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <div>
+
+                                <span>
+                                    Inspection Pass Rate
+                                </span>
+
+                                <strong>
+
+                                    <t t-esc="state.data.inspections.pass_rate"/>%
+
+                                </strong>
+
+                            </div>
+
+                            <small>
+
+                                <t t-esc="state.data.inspections.total"/>
+
+                                inspections in selected period
+
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_progress_track">
+
+                            <div class="o_eq_progress_fill"
+                                 t-att-style="'width:' + this.percent(state.data.inspections.pass_rate)"/>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="o_eq_section">
+
+                    <h3>
+
+                        <i class="fa fa-wrench me-2"/>
+
+                        MAINTENANCE &amp; SPARE PARTS
+
+                    </h3>
+
+
+                    <div class="o_eq_cards o_eq_cards_4">
+
+
+                        <div class="o_eq_card o_eq_card_blue">
+
+                            <span>
+                                Open Requests
+                            </span>
+
+                            <strong t-esc="state.data.maintenance.open"/>
+
+                            <small>
+                                Inspection-generated maintenance
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_red">
+
+                            <span>
+                                Critical Requests
+                            </span>
+
+                            <strong t-esc="state.data.maintenance.critical"/>
+
+                            <small>
+                                Critical failure severity
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_peach">
+
+                            <span>
+                                Parts Due Soon
+                            </span>
+
+                            <strong t-esc="state.data.spare_parts.due_soon"/>
+
+                            <small>
+                                Due within 7 days
+                            </small>
+
+                        </div>
+
+
+                        <div class="o_eq_card o_eq_card_red">
+
+                            <span>
+                                Overdue Parts
+                            </span>
+
+                            <strong t-esc="state.data.spare_parts.overdue"/>
+
+                            <small>
+                                Past maintenance date
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <section class="o_eq_section">
+
+                    <h3>
+
+                        <i class="fa fa-bar-chart me-2"/>
+
+                        ANALYTICS
+
+                    </h3>
+
+
+                    <div class="o_eq_analytics_grid">
+
+
+                        <!-- Equipment Status -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-pie-chart me-2"/>
+
+                                Equipment Status
+
+                            </h4>
+
+
+                            <div class="o_eq_donut_wrap">
+
+                                <div class="o_eq_donut"
+                                     t-att-class="state.hover.equipment ? 'o_eq_donut_hovered' : ''"
+                                     t-att-style="this.equipmentDonutStyle">
+
+                                    <div class="o_eq_donut_center">
+
+                                        <strong t-esc="this.equipmentHoverValue"/>
+
+                                        <small t-esc="this.equipmentHoverLabel"/>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="o_eq_legend">
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-status="active"
+                                          t-on-mouseenter="this.setEquipmentHover"
+                                          t-on-mouseleave="this.clearEquipmentHover"
+                                          t-on-click="this.openEquipmentList">
+
+                                        <i class="o_eq_dot o_eq_dot_green"/>
+
+                                        <span>Active <small>(<t t-esc="this.equipmentPercent('active')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.equipment.active"/>
+
+                                    </span>
+
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-status="maintenance"
+                                          t-on-mouseenter="this.setEquipmentHover"
+                                          t-on-mouseleave="this.clearEquipmentHover"
+                                          t-on-click="this.openEquipmentList">
+
+                                        <i class="o_eq_dot o_eq_dot_orange"/>
+
+                                        <span>Maintenance <small>(<t t-esc="this.equipmentPercent('maintenance')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.equipment.maintenance"/>
+
+                                    </span>
+
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-status="out_of_service"
+                                          t-on-mouseenter="this.setEquipmentHover"
+                                          t-on-mouseleave="this.clearEquipmentHover"
+                                          t-on-click="this.openEquipmentList">
+
+                                        <i class="o_eq_dot o_eq_dot_red"/>
+
+                                        <span>Out of Service <small>(<t t-esc="this.equipmentPercent('out_of_service')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.equipment.out_of_service"/>
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Severity -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-exclamation-triangle me-2"/>
+
+                                Failure Severity
+
+                            </h4>
+
+
+                            <div class="o_eq_donut_wrap">
+
+                                <div class="o_eq_donut"
+                                     t-att-class="state.hover.severity ? 'o_eq_donut_hovered' : ''"
+                                     t-att-style="this.severityDonutStyle">
+
+                                    <div class="o_eq_donut_center">
+
+                                        <strong t-esc="this.severityHoverValue"/>
+
+                                        <small t-esc="this.severityHoverLabel"/>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="o_eq_legend">
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-severity="low"
+                                          t-on-mouseenter="this.setSeverityHover"
+                                          t-on-mouseleave="this.clearSeverityHover"
+                                          t-on-click="this.openSeverityInspections">
+
+                                        <i class="o_eq_dot o_eq_dot_green"/>
+
+                                        <span>Low <small>(<t t-esc="this.severityPercent('low')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.analytics.severity.low"/>
+
+                                    </span>
+
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-severity="medium"
+                                          t-on-mouseenter="this.setSeverityHover"
+                                          t-on-mouseleave="this.clearSeverityHover"
+                                          t-on-click="this.openSeverityInspections">
+
+                                        <i class="o_eq_dot o_eq_dot_orange"/>
+
+                                        <span>Medium <small>(<t t-esc="this.severityPercent('medium')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.analytics.severity.medium"/>
+
+                                    </span>
+
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-severity="high"
+                                          t-on-mouseenter="this.setSeverityHover"
+                                          t-on-mouseleave="this.clearSeverityHover"
+                                          t-on-click="this.openSeverityInspections">
+
+                                        <i class="o_eq_dot o_eq_dot_high"/>
+
+                                        <span>High <small>(<t t-esc="this.severityPercent('high')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.analytics.severity.high"/>
+
+                                    </span>
+
+
+                                    <span class="o_eq_legend_item o_eq_legend_clickable"
+                                          role="button"
+                                          data-severity="critical"
+                                          t-on-mouseenter="this.setSeverityHover"
+                                          t-on-mouseleave="this.clearSeverityHover"
+                                          t-on-click="this.openSeverityInspections">
+
+                                        <i class="o_eq_dot o_eq_dot_red"/>
+
+                                        <span>Critical <small>(<t t-esc="this.severityPercent('critical')"/>%)</small></span>
+
+                                        <strong t-esc="state.data.analytics.severity.critical"/>
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Top Defects -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-bug me-2"/>
+
+                                Top Defects
+
+                            </h4>
+
+
+                            <t t-if="state.data.analytics.top_defects.length">
+
+                                <div class="o_eq_bar_list">
+
+                                    <t t-foreach="state.data.analytics.top_defects"
+                                       t-as="row"
+                                       t-key="row.id">
+
+                                        <div class="o_eq_bar_row">
+
+                                            <div class="o_eq_bar_label">
+
+                                                <span t-esc="row.name"/>
+
+                                                <strong t-esc="row.count"/>
+
+                                            </div>
+
+
+                                            <div class="o_eq_bar_track">
+
+                                                <div class="o_eq_bar_fill"
+                                                     t-att-style="'width:' + this.barWidth(row.count, state.data.analytics.top_defects)"/>
+
+                                            </div>
+
+                                        </div>
+
+                                    </t>
+
+                                </div>
+
+                            </t>
+
+
+                            <div class="o_eq_empty"
+                                 t-else="">
+
+                                No failed checks in this period.
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- By Category -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-folder-open me-2"/>
+
+                                Failed Inspections by Category
+
+                            </h4>
+
+
+                            <t t-if="state.data.analytics.category_failures.length">
+
+                                <div class="o_eq_bar_list">
+
+                                    <t t-foreach="state.data.analytics.category_failures"
+                                       t-as="row"
+                                       t-key="row.id">
+
+                                        <div class="o_eq_bar_row">
+
+                                            <div class="o_eq_bar_label">
+
+                                                <span t-esc="row.name"/>
+
+                                                <strong t-esc="row.count"/>
+
+                                            </div>
+
+
+                                            <div class="o_eq_bar_track">
+
+                                                <div class="o_eq_bar_fill o_eq_bar_fill_alt"
+                                                     t-att-style="'width:' + this.barWidth(row.count, state.data.analytics.category_failures)"/>
+
+                                            </div>
+
+                                        </div>
+
+                                    </t>
+
+                                </div>
+
+                            </t>
+
+
+                            <div class="o_eq_empty"
+                                 t-else="">
+
+                                No failed inspections by category.
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- By Location -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-map-marker me-2"/>
+
+                                Failures by Location
+
+                            </h4>
+
+
+                            <t t-if="state.data.analytics.location_failures.length">
+
+                                <div class="o_eq_bar_list">
+
+                                    <t t-foreach="state.data.analytics.location_failures"
+                                       t-as="row"
+                                       t-key="row.name">
+
+                                        <div class="o_eq_bar_row">
+
+                                            <div class="o_eq_bar_label">
+
+                                                <span t-esc="row.name"/>
+
+                                                <strong t-esc="row.count"/>
+
+                                            </div>
+
+
+                                            <div class="o_eq_bar_track">
+
+                                                <div class="o_eq_bar_fill o_eq_bar_fill_location"
+                                                     t-att-style="'width:' + this.barWidth(row.count, state.data.analytics.location_failures)"/>
+
+                                            </div>
+
+                                        </div>
+
+                                    </t>
+
+                                </div>
+
+                            </t>
+
+
+                            <div class="o_eq_empty"
+                                 t-else="">
+
+                                No location failure data.
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Trend -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-line-chart me-2"/>
+
+                                Inspection Trend
+
+                            </h4>
+
+
+                            <div class="o_eq_trend"
+                                 t-if="state.data.analytics.inspection_trend.length">
+
+                                <t t-foreach="state.data.analytics.inspection_trend"
+                                   t-as="row"
+                                   t-key="row.label">
+
+                                    <div class="o_eq_trend_item">
+
+                                        <span class="o_eq_trend_value"
+                                              t-esc="row.count"/>
+
+                                        <div class="o_eq_trend_track">
+
+                                            <div class="o_eq_trend_bar"
+                                                 t-att-style="'height:' + this.trendHeight(row.count)"/>
+
+                                        </div>
+
+                                        <small t-esc="row.label"/>
+
+                                    </div>
+
+                                </t>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =====================================================
+                     DETAILS
+                ====================================================== -->
+
+                <section class="o_eq_section">
+
+                    <h3>
+
+                        <i class="fa fa-table me-2"/>
+
+                        DETAILS
+
+                    </h3>
+
+
+                    <div class="o_eq_details_grid">
+
+
+                        <!-- Critical Inspections -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-exclamation-circle me-2"/>
+
+                                Recent Critical Inspections
+
+                            </h4>
+
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover o_eq_table">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Inspection</th>
+
+                                            <th>Equipment</th>
+
+                                            <th>Defect</th>
+
+                                            <th>Date</th>
+
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        <t t-foreach="state.data.details.recent_critical"
+                                           t-as="row"
+                                           t-key="row.id">
+
+                                            <tr>
+
+                                                <td>
+
+                                                    <a href="#"
+                                                       t-att-data-id="row.id"
+                                                       t-on-click.prevent="this.openInspection"
+                                                       t-esc="row.name"/>
+
+                                                </td>
+
+                                                <td t-esc="row.equipment"/>
+
+                                                <td t-esc="row.defects"/>
+
+                                                <td t-esc="row.date"/>
+
+                                            </tr>
+
+                                        </t>
+
+
+                                        <tr t-if="!state.data.details.recent_critical.length">
+
+                                            <td colspan="4"
+                                                class="text-muted">
+
+                                                No critical inspections.
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Equipment Attention -->
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-warning me-2"/>
+
+                                Equipment Requiring Attention
+
+                            </h4>
+
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover o_eq_table">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Equipment</th>
+
+                                            <th>Location</th>
+
+                                            <th>Status</th>
+
+                                            <th>Open Maintenance</th>
+
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        <t t-foreach="state.data.details.equipment_attention"
+                                           t-as="row"
+                                           t-key="row.id">
+
+                                            <tr>
+
+                                                <td>
+
+                                                    <a href="#"
+                                                       t-att-data-id="row.id"
+                                                       t-on-click.prevent="this.openEquipment"
+                                                       t-esc="row.name"/>
+
+                                                </td>
+
+
+                                                <td t-esc="row.location"/>
+
+
+                                                <td>
+
+                                                    <span class="badge rounded-pill"
+                                                          t-att-class="row.status === 'out_of_service' ? 'text-bg-danger' : 'text-bg-warning'"
+                                                          t-esc="row.status === 'out_of_service' ? 'Out of Service' : 'Under Maintenance'"/>
+
+                                                </td>
+
+
+                                                <td t-esc="row.open_maintenance"/>
+
+                                            </tr>
+
+                                        </t>
+
+
+                                        <tr t-if="!state.data.details.equipment_attention.length">
+
+                                            <td colspan="4"
+                                                class="text-muted">
+
+                                                No equipment requires attention.
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-clock-o me-2"/>
+
+                                Overdue Spare Parts
+
+                            </h4>
+
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover o_eq_table">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Part</th>
+
+                                            <th>Equipment</th>
+
+                                            <th>Due Date</th>
+
+                                            <th>Days Overdue</th>
+
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        <t t-foreach="state.data.details.overdue_parts"
+                                           t-as="row"
+                                           t-key="row.id">
+
+                                            <tr>
+
+                                                <td t-esc="row.name"/>
+
+                                                <td t-esc="row.equipment"/>
+
+                                                <td t-esc="row.next_date"/>
+
+                                                <td>
+
+                                                    <span class="badge text-bg-danger"
+                                                          t-esc="row.days_overdue"/>
+
+                                                </td>
+
+                                            </tr>
+
+                                        </t>
+
+
+                                        <tr t-if="!state.data.details.overdue_parts.length">
+
+                                            <td colspan="4"
+                                                class="text-muted">
+
+                                                No overdue spare-part maintenance.
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="o_eq_panel">
+
+                            <h4>
+
+                                <i class="fa fa-wrench me-2"/>
+
+                                Recent Maintenance Requests
+
+                            </h4>
+
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover o_eq_table">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>Request</th>
+
+                                            <th>Equipment</th>
+
+                                            <th>Severity</th>
+
+                                            <th>Stage</th>
+
+                                        </tr>
+
+                                    </thead>
+
+
+                                    <tbody>
+
+                                        <t t-foreach="state.data.details.recent_maintenance"
+                                           t-as="row"
+                                           t-key="row.id">
+
+                                            <tr>
+
+                                                <td>
+
+                                                    <a href="#"
+                                                       t-att-data-id="row.id"
+                                                       t-on-click.prevent="this.openMaintenance"
+                                                       t-esc="row.name"/>
+
+                                                </td>
+
+
+                                                <td t-esc="row.equipment"/>
+
+
+                                                <td>
+
+                                                    <span class="badge rounded-pill"
+                                                          t-att-class="row.severity === 'critical' ? 'text-bg-danger' : (row.severity === 'high' ? 'text-bg-primary' : (row.severity === 'medium' ? 'text-bg-warning' : 'text-bg-success'))"
+                                                          t-esc="row.severity || '-'"/>
+
+                                                </td>
+
+
+                                                <td t-esc="row.stage"/>
+
+                                            </tr>
+
+                                        </t>
+
+
+                                        <tr t-if="!state.data.details.recent_maintenance.length">
+
+                                            <td colspan="4"
+                                                class="text-muted">
+
+                                                No inspection-generated maintenance requests.
+
+                                            </td>
+
+                                        </tr>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </t>
+
+        </div>
+
+    </t>
+
+</templates>

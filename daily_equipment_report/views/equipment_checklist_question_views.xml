@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_equipment_checklist_question_list" model="ir.ui.view">
+        <field name="name">equipment.checklist.question.list</field>
+        <field name="model">equipment.checklist.question</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" default_order="category_id, sequence, id">
+                <field name="sequence" widget="handle"/>
+                <field name="category_id"/>
+                <field name="name"/>
+                <field name="failure_severity"
+                       widget="badge"
+                       decoration-info="failure_severity == 'low'"
+                       decoration-warning="failure_severity == 'medium'"
+                       decoration-primary="failure_severity == 'high'"
+                       decoration-danger="failure_severity == 'critical'"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_equipment_checklist_question_form" model="ir.ui.view">
+        <field name="name">equipment.checklist.question.form</field>
+        <field name="model">equipment.checklist.question</field>
+        <field name="arch" type="xml">
+            <form string="Inspection Question">
+                <sheet>
+                    <widget name="web_ribbon"
+                            text="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. Are the tires in good condition?"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="failure_severity"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-danger"
+                         role="alert"
+                         invisible="failure_severity != 'critical'">
+                        A No answer flags the inspection. Use the Out of Service button on the submitted report to manually change equipment status.
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_equipment_checklist_question_search" model="ir.ui.view">
+        <field name="name">equipment.checklist.question.search</field>
+        <field name="model">equipment.checklist.question</field>
+        <field name="arch" type="xml">
+            <search string="Inspection Questions">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="failure_severity"/>
+                <filter string="High"
+                        name="high"
+                        domain="[('failure_severity', '=', 'high')]"/>
+                <filter string="Critical"
+                        name="critical"
+                        domain="[('failure_severity', '=', 'critical')]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Failure Severity" name="group_severity" context="{'group_by': 'failure_severity'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_equipment_checklist_question" model="ir.actions.act_window">
+        <field name="name">Inspection Questions</field>
+        <field name="res_model">equipment.checklist.question</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_equipment_checklist_question_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create inspection questions</p>
+            <p>Questions are assigned to an equipment category and loaded automatically into daily inspections.</p>
+        </field>
+    </record>
+</odoo>

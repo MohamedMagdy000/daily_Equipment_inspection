@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_equipment_spare_part_list" model="ir.ui.view">
+        <field name="name">equipment.spare.part.list</field>
+        <field name="model">equipment.spare.part</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="maintenance_state == 'overdue'"
+                  decoration-warning="maintenance_state == 'due_soon'">
+                <field name="equipment_id"/>
+                <field name="category_id" optional="hide"/>
+                <field name="name"/>
+                <field name="last_maintenance_date"/>
+                <field name="maintenance_cycle_days"/>
+                <field name="next_maintenance_date"/>
+                <field name="maintenance_state" widget="badge"
+                       decoration-success="maintenance_state == 'healthy'"
+                       decoration-warning="maintenance_state == 'due_soon'"
+                       decoration-danger="maintenance_state == 'overdue'"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_equipment_spare_part_form" model="ir.ui.view">
+        <field name="name">equipment.spare.part.form</field>
+        <field name="model">equipment.spare.part</field>
+        <field name="arch" type="xml">
+            <form string="Equipment Spare Part">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Oil Filter"/></h1>
+                    </div>
+                    <group>
+                        <group string="Equipment">
+                            <field name="equipment_id"/>
+                            <field name="category_id" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                        </group>
+                        <group string="Maintenance Cycle">
+                            <field name="last_maintenance_date"/>
+                            <field name="maintenance_cycle_days"/>
+                            <field name="next_maintenance_date" readonly="1"/>
+                            <field name="maintenance_state" widget="badge"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_equipment_spare_part_search" model="ir.ui.view">
+        <field name="name">equipment.spare.part.search</field>
+        <field name="model">equipment.spare.part</field>
+        <field name="arch" type="xml">
+            <search string="Spare Parts">
+                <field name="name"/>
+                <field name="equipment_id"/>
+                <field name="category_id"/>
+                <filter string="Overdue" name="overdue" domain="[('next_maintenance_date', '&lt;', context_today())]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Equipment" name="group_equipment" context="{'group_by': 'equipment_id'}"/>
+                    <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_equipment_spare_part" model="ir.actions.act_window">
+        <field name="name">Spare Parts</field>
+        <field name="res_model">equipment.spare.part</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_equipment_spare_part_search"/>
+    </record>
+</odoo>

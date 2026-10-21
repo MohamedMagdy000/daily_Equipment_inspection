@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_daily_inspection_equipment_form"
+            model="ir.ui.view">
+
+        <field name="name">daily.inspection.maintenance.equipment.form</field>
+        <field name="model">maintenance.equipment</field>
+
+        <field name="priority">100</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Equipment">
+
+                <header>
+
+                    <button name="action_set_out_of_service"
+                            type="object"
+                            string="Set Out of Service"
+                            class="btn-danger"
+                            icon="fa-ban"
+                            invisible="operational_status == 'out_of_service'"/>
+
+                    <button name="action_return_to_service"
+                            type="object"
+                            string="Return to Service"
+                            class="btn-primary"
+                            icon="fa-check"
+                            invisible="operational_status != 'out_of_service'"/>
+
+                    <field name="operational_status"
+                           widget="statusbar"
+                           statusbar_visible="active,maintenance,out_of_service"/>
+
+                </header>
+
+                <sheet>
+
+                    <widget name="web_ribbon"
+                            text="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+
+                    <div class="oe_button_box"
+                         name="button_box">
+
+                        <button name="action_view_reports"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-clipboard">
+
+                            <field name="report_count"
+                                   widget="statinfo"
+                                   string="Inspections"/>
+
+                        </button>
+
+                        <button name="action_view_spare_parts"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-cogs">
+
+                            <field name="spare_part_count"
+                                   widget="statinfo"
+                                   string="Spare Parts"/>
+
+                        </button>
+
+                    </div>
+
+                    <field name="image_1920"
+                           widget="image"
+                           class="oe_avatar"
+                           options="{
+                               'preview_image': 'image_1920',
+                               'zoom': true
+                           }"/>
+
+                    <div class="oe_title">
+
+                        <label for="name"/>
+
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. Breakout Machine"/>
+                        </h1>
+
+                        <div class="text-muted">
+
+                            <field name="category_id"
+                                   class="oe_inline"
+                                   placeholder="Select equipment category"
+                                   options="{
+                                       'no_create_edit': true
+                                   }"/>
+
+                        </div>
+
+                    </div>
+
+                    <group>
+
+                        <group string="Equipment Information">
+
+                            <field name="model"
+                                   string="Model / Brand"
+                                   placeholder="e.g. Breakout Machine"/>
+
+                            <field name="serial_no"
+                                   string="Serial / Plate Number"
+                                   placeholder="e.g. OM-12345"/>
+
+                            <field name="asset_number" placeholder="e.g. AST-0001"/>
+
+                            <field name="barcode" placeholder="Scan or enter barcode"/>
+
+                            <field name="purchase_date"/>
+
+                            <field name="last_calibration"/>
+
+                            <field name="location"
+                                   placeholder="e.g. Muscat Main Workshop"/>
+
+                        </group>
+
+                        <group string="Responsibility and Tracking">
+
+                            <field name="owner_user_id"
+                                   string="Responsible User"
+                                   options="{
+                                       'no_create_edit': true
+                                   }"/>
+
+                            <field name="department_id"
+                                   options="{'no_create_edit': true}"/>
+
+                            <field name="maintenance_team_id"
+                                   string="Maintenance Team"
+                                   options="{
+                                       'no_create_edit': true
+                                   }"/>
+
+                            <field name="company_id"
+                                   groups="base.group_multi_company"
+                                   options="{
+                                       'no_create_edit': true
+                                   }"/>
+
+                            <field name="last_report_date"
+                                   string="Last Inspection"
+                                   readonly="1"/>
+
+                            <field name="active"
+                                   invisible="1"/>
+
+                        </group>
+
+                    </group>
+
+
+                    <notebook>
+
+                        <page string="Spare Parts"
+                              name="spare_parts">
+
+                            <div class="alert alert-info"
+                                 role="alert">
+
+                                Track spare parts and preventive-maintenance
+                                cycles for this equipment. The next maintenance
+                                date is calculated automatically.
+
+                            </div>
+
+                            <field name="spare_part_ids"
+                                   context="{
+                                       'default_equipment_id': id
+                                   }">
+
+                                <list editable="bottom"
+                                      default_order="next_maintenance_date, name"
+                                      decoration-warning="maintenance_state == 'due_soon'"
+                                      decoration-danger="maintenance_state == 'overdue'">
+
+                                    <field name="name"
+                                           placeholder="e.g. Radiator"/>
+
+                                    <field name="last_maintenance_date"/>
+
+                                    <field name="maintenance_cycle_days"/>
+
+                                    <field name="next_maintenance_date"
+                                           readonly="1"/>
+
+                                    <field name="maintenance_state"
+                                           widget="badge"
+                                           decoration-success="maintenance_state == 'healthy'"
+                                           decoration-warning="maintenance_state == 'due_soon'"
+                                           decoration-danger="maintenance_state == 'overdue'"/>
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                        <page string="Inspection History"
+                              name="inspection_history">
+
+                            <div class="alert alert-info"
+                                 role="alert"
+                                 invisible="report_count">
+
+                                No inspection has been recorded for this
+                                equipment yet.
+
+                            </div>
+
+                            <field name="report_ids"
+                                   readonly="1"
+                                   context="{
+                                       'default_equipment_id': id
+                                   }">
+
+                                <list create="false"
+                                      edit="false"
+                                      delete="false"
+                                      default_order="report_date desc"
+                                      decoration-danger="has_issue">
+
+                                    <field name="name"
+                                           string="Inspection"/>
+
+                                    <field name="user_id"
+                                           string="Inspected By"/>
+
+                                    <field name="report_date"/>
+
+                                    <field name="state"
+                                           widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-warning="state == 'submitted'"
+                                           decoration-success="state == 'approved' or state == 'closed'"/>
+
+                                    <field name="has_issue"
+                                           optional="show"/>
+
+                                    <field name="has_critical_issue"
+                                           optional="show"/>
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+                <chatter/>
+
+            </form>
+
+        </field>
+
+    </record>
+
+    <record id="view_daily_inspection_equipment_list"
+            model="ir.ui.view">
+
+        <field name="name">daily.inspection.maintenance.equipment.list</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="priority">100</field>
+
+        <field name="arch" type="xml">
+
+            <list string="Equipment"
+                  default_order="name"
+                  decoration-muted="not active"
+                  decoration-warning="operational_status == 'maintenance'"
+                  decoration-danger="operational_status == 'out_of_service'">
+
+                <field name="name"/>
+
+                <field name="category_id"/>
+
+                <field name="model"
+                       string="Model / Brand"
+                       optional="show"/>
+
+                <field name="serial_no"
+                       string="Serial / Plate Number"
+                       optional="show"/>
+
+                <field name="asset_number" optional="show"/>
+
+                <field name="barcode" optional="show"/>
+
+                <field name="last_calibration" optional="hide"/>
+
+                <field name="department_id" optional="show"/>
+
+                <field name="location"
+                       optional="show"/>
+
+                <field name="owner_user_id"
+                       string="Responsible User"
+                       optional="show"/>
+
+                <field name="maintenance_team_id"
+                       string="Maintenance Team"
+                       optional="hide"/>
+
+                <field name="operational_status"
+                       widget="badge"
+                       decoration-success="operational_status == 'active'"
+                       decoration-warning="operational_status == 'maintenance'"
+                       decoration-danger="operational_status == 'out_of_service'"/>
+
+                <field name="report_count"
+                       string="Inspections"
+                       optional="show"/>
+
+                <field name="spare_part_count"
+                       string="Spare Parts"
+                       optional="hide"/>
+
+                <field name="last_report_date"
+                       string="Last Inspection"
+                       optional="show"/>
+
+                <field name="company_id"
+                       groups="base.group_multi_company"
+                       optional="hide"/>
+
+                <field name="active"
+                       column_invisible="True"/>
+
+            </list>
+
+        </field>
+
+    </record>
+
+    <record id="view_daily_inspection_equipment_search"
+            model="ir.ui.view">
+
+        <field name="name">daily.inspection.maintenance.equipment.search</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="priority">100</field>
+
+        <field name="arch" type="xml">
+
+            <search string="Equipment">
+
+                <!-- Search fields -->
+                <field name="name"/>
+
+                <field name="category_id"/>
+
+                <field name="model"
+                       string="Model / Brand"/>
+
+                <field name="serial_no"
+                       string="Serial / Plate Number"/>
+
+                <field name="location"/>
+
+                <field name="asset_number"/>
+
+                <field name="barcode"/>
+
+                <field name="last_calibration"/>
+
+                <field name="department_id"/>
+
+                <field name="owner_user_id"
+                       string="Responsible User"/>
+
+                <field name="maintenance_team_id"
+                       string="Maintenance Team"/>
+
+                <field name="operational_status"/>
+
+                <separator/>
+
+                <filter string="Active"
+                        name="operational"
+                        domain="[('operational_status', '=', 'active')]"/>
+
+                <filter string="Under Maintenance"
+                        name="under_maintenance"
+                        domain="[('operational_status', '=', 'maintenance')]"/>
+
+                <filter string="Out of Service"
+                        name="out_of_service"
+                        domain="[('operational_status', '=', 'out_of_service')]"/>
+
+                <separator/>
+
+                <filter string="Never Inspected"
+                        name="never_inspected"
+                        domain="[('last_report_date', '=', False)]"/>
+
+                <filter string="Has Inspections"
+                        name="has_inspections"
+                        domain="[('report_count', '&gt;', 0)]"/>
+
+                <separator/>
+
+                <filter string="Archived"
+                        name="inactive"
+                        domain="[('active', '=', False)]"/>
+
+                <group>
+
+                    <filter string="Category"
+                            name="group_category"
+                            context="{
+                                'group_by': 'category_id'
+                            }"/>
+
+                    <filter string="Operational Status"
+                            name="group_status"
+                            context="{
+                                'group_by': 'operational_status'
+                            }"/>
+
+                    <filter string="Responsible User"
+                            name="group_owner"
+                            context="{
+                                'group_by': 'owner_user_id'
+                            }"/>
+
+                    <filter string="Department"
+                            name="group_department"
+                            context="{'group_by': 'department_id'}"/>
+
+                    <filter string="Maintenance Team"
+                            name="group_maintenance_team"
+                            context="{
+                                'group_by': 'maintenance_team_id'
+                            }"/>
+
+                    <filter string="Location"
+                            name="group_location"
+                            context="{
+                                'group_by': 'location'
+                            }"/>
+
+                    <filter string="Company"
+                            name="group_company"
+                            context="{
+                                'group_by': 'company_id'
+                            }"
+                            groups="base.group_multi_company"/>
+
+                </group>
+
+            </search>
+
+        </field>
+
+    </record>
+
+    <record id="action_maintenance_equipment_daily_inspection"
+            model="ir.actions.act_window">
+
+        <field name="name">Equipment</field>
+
+        <field name="res_model">maintenance.equipment</field>
+
+        <field name="view_mode">list,form</field>
+
+        <field name="search_view_id"
+               ref="view_daily_inspection_equipment_search"/>
+
+        <field name="context">{}</field>
+
+        <field name="help" type="html">
+
+            <p class="o_view_nocontent_smiling_face">
+                Create your first equipment record
+            </p>
+
+            <p>
+                Register equipment, perform inspections, manage failures,
+                and track spare-part maintenance.
+            </p>
+
+        </field>
+
+    </record>
+
+    <record id="action_maintenance_equipment_daily_inspection_list_view"
+            model="ir.actions.act_window.view">
+
+        <field name="sequence"
+               eval="10"/>
+
+        <field name="view_mode">list</field>
+
+        <field name="view_id"
+               ref="view_daily_inspection_equipment_list"/>
+
+        <field name="act_window_id"
+               ref="action_maintenance_equipment_daily_inspection"/>
+
+    </record>
+    
+    <record id="action_maintenance_equipment_daily_inspection_form_view"
+            model="ir.actions.act_window.view">
+
+        <field name="sequence"
+               eval="20"/>
+
+        <field name="view_mode">form</field>
+
+        <field name="view_id"
+               ref="view_daily_inspection_equipment_form"/>
+
+        <field name="act_window_id"
+               ref="action_maintenance_equipment_daily_inspection"/>
+
+    </record>
+
+</odoo>
