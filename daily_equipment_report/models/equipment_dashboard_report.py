@@ -140,6 +140,10 @@ class EquipmentDashboardReport(models.AbstractModel):
                 {
                     "label": row[label_key],
                     "count": row[count_key],
+                    "equipment": ", ".join(
+                        "%s (x%s)" % (item["name"], item["count"])
+                        for item in row.get("equipment", [])
+                    ),
                     "height": max(
                         2,
                         round(row[count_key] * 26 / maximum),

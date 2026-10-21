@@ -251,6 +251,13 @@
                             white-space: nowrap;
                         }
                         .eq-bar-label strong { color: #252733; float: right; }
+                        .eq-bar-equipment {
+                            color: #737987;
+                            font-size: 5.5px;
+                            line-height: 7px;
+                            margin-bottom: 1px;
+                            overflow-wrap: anywhere;
+                        }
                         .eq-bar-track {
                             background: #f0f1f4;
                             border-radius: 5px;
@@ -607,6 +614,7 @@
                                     <div class="eq-bar-list">
                                         <div class="eq-bar-row" t-foreach="top_defects" t-as="row">
                                             <div class="eq-bar-label"><span t-out="row['label']"/><strong t-out="row['count']"/></div>
+                                            <div class="eq-bar-equipment" t-if="row['equipment']">Equipment: <span t-out="row['equipment']"/></div>
                                             <div class="eq-bar-track"><div class="eq-bar-fill" t-att-style="row['width_style']"/></div>
                                         </div>
                                         <div class="eq-empty" t-if="not top_defects">No failed checks in this period.</div>

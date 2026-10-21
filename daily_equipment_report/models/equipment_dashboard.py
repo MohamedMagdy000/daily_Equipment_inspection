@@ -1107,6 +1107,45 @@ class EquipmentInspectionDashboard(models.AbstractModel):
             limit=10,
         )
 
+        questions = [
+            question
+            for question, _count in grouped
+            if question
+        ]
+        equipment_counts = defaultdict(dict)
+
+        if questions:
+            equipment_grouped = Line._read_group(
+                domain
+                + [
+                    (
+                        "question_id",
+                        "in",
+                        [question.id for question in questions],
+                    )
+                ],
+                [
+                    "question_id",
+                    "report_id",
+                ],
+                [
+                    "__count",
+                ],
+            )
+
+            for question, report, count in equipment_grouped:
+                if question and report and report.equipment_id:
+                    equipment = report.equipment_id
+                    item = equipment_counts[question.id].setdefault(
+                        equipment.id,
+                        {
+                            "id": equipment.id,
+                            "name": equipment.display_name,
+                            "count": 0,
+                        },
+                    )
+                    item["count"] += count
+
         for question, count in grouped:
 
             if question:
@@ -1120,6 +1159,15 @@ class EquipmentInspectionDashboard(models.AbstractModel):
 
                     "count":
                         count,
+
+                    "equipment":
+                        sorted(
+                            equipment_counts[question.id].values(),
+                            key=lambda item: (
+                                -item["count"],
+                                item["name"].lower(),
+                            ),
+                        ),
                 })
 
         return rows

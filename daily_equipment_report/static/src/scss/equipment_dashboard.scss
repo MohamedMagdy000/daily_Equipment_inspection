@@ -690,6 +690,81 @@
             13px;
     }
 
+    .o_eq_bar_equipment {
+
+        display:
+            flex;
+
+        flex-wrap:
+            wrap;
+
+        align-items:
+            center;
+
+        gap:
+            5px;
+
+        margin:
+            0
+            0
+            6px;
+
+        color:
+            #737987;
+
+        font-size:
+            11px;
+    }
+
+
+    .o_eq_bar_equipment_label {
+
+        font-weight:
+            600;
+    }
+
+
+    .o_eq_equipment_tag {
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        gap:
+            4px;
+
+        max-width:
+            100%;
+
+        padding:
+            2px
+            7px;
+
+        border-radius:
+            99px;
+
+        background:
+            #f1f3f7;
+
+        color:
+            #4d5260;
+
+        overflow-wrap:
+            anywhere;
+
+
+        small {
+
+            color:
+                #737987;
+
+            white-space:
+                nowrap;
+        }
+    }
+
 
     .o_eq_bar_track {
 
